@@ -14,7 +14,13 @@
                         <Font name="Noto Sans Regular" size="24.0" />
                     </font>
                 </JFXButton>
-                <!--<JFXProgressBar layoutX="332.0" layoutY="381.0" prefHeight="10.0" prefWidth="294.0" progress="0.51" />-->
+
+                <Label fx:id="errorLabel" layoutX="333.0" layoutY="240.0" prefHeight="27.0" prefWidth="86.0" text="Errors" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+
                 <JFXComboBox layoutX="42.0" layoutY="100.0" prefHeight="29.0" prefWidth="208.0" promptText="L1" />
                 <JFXComboBox layoutX="42.0" layoutY="149.0" prefHeight="29.0" prefWidth="208.0" promptText="L2" style="-jfx-focus-color: #4a4c5d;" />
                 <Label layoutX="27.0" layoutY="60.0" prefHeight="27.0" prefWidth="86.0" text="Inputs" textAlignment="CENTER" textFill="WHITE">

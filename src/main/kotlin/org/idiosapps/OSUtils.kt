@@ -4,8 +4,8 @@ class OSUtils {
     companion object {
         var WINDOWS: String = "windows"
         var MACOS: String = "macOS"
-        var UBUNTU: String = "ubuntu"
-        var UNDETECTED_OS: String = "undetected OS"
+        var LINUX: String = "ubuntu"
+        var UNDETECTED_OS: String = "undetected"
 
         fun getOS(): String {
             val operatingSystem : String = System.getProperty("os.name").toLowerCase()
@@ -13,7 +13,7 @@ class OSUtils {
             when {
                 operatingSystem.contains("windows") -> return WINDOWS
                 operatingSystem.contains("mac") -> return MACOS
-                operatingSystem.contains("ubuntu") -> return UBUNTU
+                operatingSystem.contains("linux") -> return LINUX
             }
             return UNDETECTED_OS
         }
