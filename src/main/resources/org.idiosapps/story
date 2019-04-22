@@ -1,0 +1,17 @@
+Chapter 1: I want to make language education rewarding and fun.
+
+What is a "graded reader", and why do I care?
+- GRs books have a range of difficulty, so there are some more appropriate to beginners, and some tailored for, say, intermediate level. The idea is that you know about 98 percent of words/characters, and so you slowly pick up a few more whilst (more importantly) understanding level-appropiate constructions in an interesting way.
+
+Why is a GR fun?
+- Even with a limited vocabulary, you can read short stories that cover any topic at all - action, mystery, diary... whatever you like!
+
+How is a GR different from textbook reading passages?
+- GRs have a few neat tools. The most important one is having a few of those 2 percent of words you don't know in the footer, so you're not always reaching for a dictionary. I'll show you an example:
+我想看一下，但是我还在吃我的三明治！ 我吃晚饭的时候，我爸爸（詹姆斯）不让我出去厨房。这次真的是可惜的，因为我从来想看烟花。。。
+- Another great feature is that Graded Reader Builder can also annotate which page a word first appeared on, so you can quickly find it again later on.
+
+How does this Graded Reader Builder work?
+- Firstly, focus on writing your story! Then decide 1) Your title, 2) which vocabulary is important, 3) key character names. Put these in the appropriate input files, and run the k0de as detailed in the instructions. If you want, you can read the source code 软件 on Github. It's that simple.
+
+Now I'd like to test the updated Footer code. 我想试试检查我刚写的软件！

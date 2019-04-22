@@ -1,0 +1,70 @@
+\documentclass{report}
+
+% Add the ability to display 汉字 and English
+\usepackage[UTF8]{ctex}
+% Add the ability to write pinyin with tones
+\usepackage{xeCJK}
+\usepackage{xpinyin}
+% Add the ability to create fancy headers and footers
+\usepackage{fancyhdr}
+% Add the ability to use Lorem Ipsum placeholder text
+\usepackage{lipsum}
+\usepackage{xcolor}
+% Add the ability to align text
+\usepackage{setspace}
+\usepackage{sectsty}
+% Add the ability to underline
+\usepackage[normalem]{ulem}
+% Make "" switch to opposing quotation marks intelligently
+\usepackage [english]{babel}
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
+% Add the ability to give underlines a colour, and its thickness
+\usepackage{color,soul}
+\definecolor{darkblue}{rgb}{0,0.8,0.2}
+\setulcolor{darkblue}
+\setul{0.5ex}{0.4ex}
+% Add the ability to use graphics
+\usepackage{graphicx}
+% Add the ability to indented paragraphs
+\usepackage{indentfirst}
+% Add the ability to use subscripts
+\usepackage{fixltx2e}
+
+% Patch for disabling using real superior glyphs
+% for superscripts 1, 2, and 3.
+\newcommand*{\DeactivateSuperscript}[1]{%
+	\expandafter\let
+	\csname\string\EU1\string\textsuperscript-#1\endcsname\relax
+}
+\DeactivateSuperscript{1}
+\DeactivateSuperscript{2}
+\DeactivateSuperscript{3}
+
+
+\pagestyle{fancy}
+\chapterfont{\centering}
+%\fancyhf{}% Clear header/footer
+%\fancyhead[C]{Header}
+%\fancyfoot[C]{Footer}% \fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+%\cfoot{}
+
+%\lhead{}
+%\chead{}
+%\rhead{}
+%\lfoot{}
+%\rfoot{}
+%\lhead{一本中文书}
+
+
+%\renewcommand{\baselinestretch}{3} 
+
+%\leftskip=0cm plus 0.5fil \rightskip=0cm plus -0.5fil
+%\parfillskip=0cm plus 1fil
+
+\setstretch{2.0}
+
+
+

@@ -8,6 +8,7 @@ import javafx.stage.Stage
 import java.io.File
 import java.io.FileInputStream
 
+// https://github.com/openjfx/samples/blob/master/IDE/IntelliJ/Modular/Java/hellofx/src/org/openjfx/MainApp.java
 class MainApp: Application() {
     override fun start(stage: Stage) {
 
@@ -17,6 +18,7 @@ class MainApp: Application() {
         val rootLayout = loader.load(fxmlInputStream) as VBox
         val scene = Scene(rootLayout)
 
+        stage.setTitle("gradedReaderBuilder");
         stage.setScene(scene)
         stage.show()
     }

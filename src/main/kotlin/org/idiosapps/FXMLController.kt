@@ -6,7 +6,7 @@ import javafx.fxml.FXML
 class FXMLController {
 
     @FXML
-    fun clickedBuildButton() {
+    fun buildButtonClicked() {
         ContentPipeline.process()
     }
 

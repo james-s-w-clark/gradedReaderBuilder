@@ -1,14 +1,17 @@
 package org.idiosapps
 
 class Filenames {
-    val inputHeaderFilename: String = "res/inputHeader"
-    val inputTitleFilename: String = "res/inputTitle"
-    val inputStoryFilename: String = "res/inputStory"
+    val resourcePrefix: String = "./src/main/resources/org.idiosapps/"
+    val outputPrefix: String = "./output/"
 
-    val inputVocabFilename: String = "res/inputVocab"
-    val inputKeyNamesFilename: String = "res/inputKeyNames"
 
-    val outputStoryFilename: String = "output/outputStory.tex"
-    val outputMarkedUpStoryFilename: String = "output/outputStoryMarked.tex"
-    val outputPDFFilename: String = "output/outputStory.pdf"
+    val inputHeaderFilename: String = resourcePrefix + "header"
+    val inputTitleFilename: String = resourcePrefix + "title"
+    val inputStoryFilename: String = resourcePrefix + "story"
+
+    val inputVocabFilename: String = resourcePrefix + "vocab"
+    val inputKeyNamesFilename: String = resourcePrefix + "names"
+
+    val outputStoryFilename: String = outputPrefix + "outputStory.tex"
+    val outputPDFFilename: String = outputPrefix + "outputStory.pdf"
 }

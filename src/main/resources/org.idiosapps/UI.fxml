@@ -9,7 +9,7 @@
     <children>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: #36394b;" VBox.vgrow="ALWAYS">
             <children>
-                <JFXButton fx:id="buildButton" onAction="#clickedBuildButton" alignment="CENTER" buttonType="RAISED" layoutX="333.0" layoutY="327.0" prefHeight="44.0" prefWidth="132.0" ripplerFill="#b51414" text="Build" textFill="WHITE">
+                <JFXButton fx:id="buildButton" text="Build" onAction="#buildButtonClicked" alignment="CENTER" buttonType="RAISED" layoutX="333.0" layoutY="327.0" prefHeight="44.0" prefWidth="132.0" ripplerFill="#b51414" textFill="WHITE">
                     <font>
                         <Font name="Noto Sans Regular" size="24.0" />
                     </font>
