@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.*?>
+<VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.idiosapps.FXMLController">
+    <children>
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: #36394b;" VBox.vgrow="ALWAYS">
+            <children>
+                <JFXButton fx:id="buildButton" onAction="#clickedBuildButton" alignment="CENTER" buttonType="RAISED" layoutX="333.0" layoutY="327.0" prefHeight="44.0" prefWidth="132.0" ripplerFill="#b51414" text="Build" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans Regular" size="24.0" />
+                    </font>
+                </JFXButton>
+                <!--<JFXProgressBar layoutX="332.0" layoutY="381.0" prefHeight="10.0" prefWidth="294.0" progress="0.51" />-->
+                <JFXComboBox layoutX="42.0" layoutY="100.0" prefHeight="29.0" prefWidth="208.0" promptText="L1" />
+                <JFXComboBox layoutX="42.0" layoutY="149.0" prefHeight="29.0" prefWidth="208.0" promptText="L2" style="-jfx-focus-color: #4a4c5d;" />
+                <Label layoutX="27.0" layoutY="60.0" prefHeight="27.0" prefWidth="86.0" text="Inputs" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <Separator layoutX="320.0" layoutY="-2.0" opacity="0.68" orientation="VERTICAL" prefHeight="400.0" prefWidth="0.0" />
+                <Separator layoutX="319.0" layoutY="44.0" opacity="0.18" prefHeight="0.0" prefWidth="319.0" />
+                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="578.0" prefHeight="44.0" prefWidth="100.0" ripplerFill="#b51414" text="Close" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans Regular" size="24.0" />
+                    </font>
+                </JFXButton>
+                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="508.0" prefHeight="44.0" prefWidth="80.0" ripplerFill="#b51414" text="Min" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans Regular" size="24.0" />
+                    </font>
+                </JFXButton>
+                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="322.0" prefHeight="44.0" prefWidth="62.0" ripplerFill="#b51414" text="Github" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans Regular" size="24.0" />
+                    </font>
+                </JFXButton>
+                <Separator layoutX="1.0" layoutY="44.0" opacity="0.18" prefHeight="0.0" prefWidth="319.0" />
+                <Label layoutX="10.0" layoutY="9.0" prefHeight="27.0" prefWidth="294.0" text="Graded Reader Builder" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold Italic" size="24.0" />
+                    </font>
+                </Label>
+                <Label layoutX="271.0" layoutY="22.0" prefHeight="27.0" prefWidth="62.0" text="by IdiosApps" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="System Italic" size="8.0" />
+                    </font>
+                </Label>
+                <JFXButton alignment="CENTER" buttonType="RAISED" disable="true" layoutX="494.0" layoutY="327.0" prefHeight="44.0" prefWidth="132.0" ripplerFill="#b51414" text="Open book" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans Regular" size="24.0" />
+                    </font>
+                </JFXButton>
+            </children>
+        </AnchorPane>
+    </children>
+</VBox>
