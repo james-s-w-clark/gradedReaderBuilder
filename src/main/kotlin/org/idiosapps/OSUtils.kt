@@ -2,16 +2,20 @@ package org.idiosapps
 
 class OSUtils {
     companion object {
-        fun getOS(): String {
-            var operatingSystem : String = System.getProperty("os.name")
+        var WINDOWS: String = "windows"
+        var MACOS: String = "macOS"
+        var UBUNTU: String = "ubuntu"
+        var UNDETECTED_OS: String = "undetected OS"
 
-            if(operatingSystem.toLowerCase().contains("windows"))
-                operatingSystem = "windows"
-            else if (operatingSystem.toLowerCase().contains("mac"))
-                operatingSystem = "mac"
-            else if (operatingSystem.toLowerCase().contains("ubuntu"))
-                operatingSystem = "ubuntu"
-            return operatingSystem
+        fun getOS(): String {
+            val operatingSystem : String = System.getProperty("os.name").toLowerCase()
+
+            when {
+                operatingSystem.contains("windows") -> return WINDOWS
+                operatingSystem.contains("mac") -> return MACOS
+                operatingSystem.contains("ubuntu") -> return UBUNTU
+            }
+            return UNDETECTED_OS
         }
     }
 }
