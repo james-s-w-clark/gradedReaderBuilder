@@ -86,7 +86,14 @@ class PDFUtils {
                     stripper.endPage = pageCounter
                     pdfPageText = stripper.getText(documentPDF)
 
-                    var pdfPageTextLines: List<String> = pdfPageText.split("\r\n")
+                    lateinit var  textLineDelimiter: String
+                    when (OSUtils.getOS()) {
+                        OSUtils.LINUX -> textLineDelimiter = "\n"
+                        OSUtils.WINDOWS -> textLineDelimiter = "\r\n"
+                        OSUtils.MACOS -> textLineDelimiter = "\n"
+                    }
+
+                    val pdfPageTextLines: List<String> = pdfPageText.split(textLineDelimiter)
 
                     pdfPageLastLine = fixPDFPageLastLine(pdfPageTextLines[pdfPageTextLines.size - 3])
                     // pdfPageTextLines[last] is blank, pdfPageTextLines[last-1] is page #, pdfPageTextLines[last-2] is last line of text (wanted)
