@@ -40,8 +40,6 @@ class FXMLController {
             try {
                 buildGradedReader()
             } catch (exception: Exception) { // e.g. Error: ctex.sty not found!
-                val text = Text(exceptionToMessage(exception))
-                text.setWrappingWidth(1000.0)
                 val alert = Alert(
                     AlertType.WARNING,
                     exceptionToMessage(exception)
@@ -93,9 +91,6 @@ class FXMLController {
         TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputHeaderFilename)
         TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputTitleFilename)
         TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputStoryFilename)
-
-        System.out.println("Copied to TeX")
-
 
         SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, filenames.inputVocabFilename, vocabComponentArray)
         // todo WriteSummaryPage.writeTexGrammar
