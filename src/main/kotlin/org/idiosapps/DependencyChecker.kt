@@ -11,7 +11,7 @@ class DependencyChecker {
             if (OSUtils.getOS().equals(OSUtils.LINUX)) {
                 try {
                     val process = Runtime.getRuntime().exec("pdflatex --version")
-                    val inputStream = process.getInputStream()
+                    val inputStream = process.inputStream
                     val s = java.util.Scanner(inputStream).useDelimiter("\\A")
                     var line = ""
                     while (s.hasNext()) {
@@ -31,7 +31,7 @@ class DependencyChecker {
         fun hasXeLaTeX(): String {
             try {
                 val process = Runtime.getRuntime().exec("xelatex --version")
-                val inputStream = process.getInputStream()
+                val inputStream = process.inputStream
                 val s = java.util.Scanner(inputStream).useDelimiter("\\A")
                 var line = ""
                 while (s.hasNext()) {
@@ -48,7 +48,7 @@ class DependencyChecker {
             } catch (exception: IOException) {
                 return "Unknown XeLaTeX setup error"
             }
-        return "Could not use XeLaTeX"
+            return "Could not use XeLaTeX"
         }
     }
 }

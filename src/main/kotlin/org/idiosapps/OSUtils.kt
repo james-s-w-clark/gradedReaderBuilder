@@ -8,7 +8,7 @@ class OSUtils {
         var UNDETECTED_OS: String = "undetected"
 
         fun getOS(): String {
-            val operatingSystem : String = System.getProperty("os.name").toLowerCase()
+            val operatingSystem: String = System.getProperty("os.name").toLowerCase()
 
             when {
                 operatingSystem.contains("windows") -> return WINDOWS

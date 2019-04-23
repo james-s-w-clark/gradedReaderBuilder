@@ -2,7 +2,7 @@ package org.idiosapps
 
 class LanguageUtils {
     companion object {
-        fun prefixLaTeXLanguageMarker (languageUsed: String) : String{
+        fun prefixLaTeXLanguageMarker(languageUsed: String): String {
             var languageMarker = ""
             when (languageUsed) {
                 "mandarin" -> languageMarker = "(\\pinyin{"

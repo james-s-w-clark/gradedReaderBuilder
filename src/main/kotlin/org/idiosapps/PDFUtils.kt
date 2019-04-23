@@ -34,12 +34,17 @@ class PDFUtils {
         fun getNumberOfPDFPages(PDFFilename: String, pdfNumberOfPages: Int): Int {
             val pdfFile = File(PDFFilename)
             val documentPDF: PDDocument = PDDocument.load(pdfFile)
-            var pdfNumberOfPages = documentPDF.getNumberOfPages()
+            var pdfNumberOfPages = documentPDF.numberOfPages
             return pdfNumberOfPages
         }
 
         // TODO split this into two functions: one for vocab pages, one for last sentences on pages.
-        fun readPDF (PDFFilename: String, vocabComponentArray: ArrayList<ArrayList<String>>, pdfPageLastSentences: ArrayList<String>, pdfNumberOfPages: Int){
+        fun readPDF(
+            PDFFilename: String,
+            vocabComponentArray: ArrayList<ArrayList<String>>,
+            pdfPageLastSentences: ArrayList<String>,
+            pdfNumberOfPages: Int
+        ) {
             // TODO use a method similar to fixPDFPageLastLine to fix 39->8217 immediately after reading in the PDF.
             val pdfFile = File(PDFFilename)
             val documentPDF: PDDocument = PDDocument.load(pdfFile)

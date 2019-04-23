@@ -12,15 +12,15 @@ class FXMLController {
     var messagePDFLatexMissing = "Miktex is missing!\n"
     var messageXeLaTeXMissing = "XeLaTeX is missing!\n"
 
-    var messageLinuxPDFLatex = "Please use \nsudo apt install texlive-latex-full\n to get Miktex" // TODO per-language install
+    var messageLinuxPDFLatex =
+        "Please use \nsudo apt install texlive-latex-full\n to get Miktex" // TODO per-language install
     var messageLinuxXeLaTeX = "Please use \nsudo apt install texlive-xetex\n\n to get XeLaTeX"
 
 
     @FXML
     fun buildButtonClicked() {
         val operatingSystem = OSUtils.getOS() // TODO make messages clean, possibly with Alert helper
-        if (!DependencyChecker.hasPDFLatex())
-        {
+        if (!DependencyChecker.hasPDFLatex()) {
             val alert = Alert(
                 AlertType.WARNING,
                 messagePDFLatexMissing + messageLinuxPDFLatex
@@ -31,19 +31,22 @@ class FXMLController {
             val xeLaTeXMessage: String = DependencyChecker.hasXeLaTeX()
             val alert = Alert(
                 AlertType.WARNING,
-                xeLaTeXMessage)
+                xeLaTeXMessage
+            )
             alert.show()
         } else {
             try {
                 buildGradedReader()
             } catch (exception: Exception) { // e.g. Error: ctex.sty not found!
                 val alert = Alert(
-                        AlertType.WARNING, // TODO give exception-specific advice (also OS specific)
-                exception.toString())
+                    AlertType.WARNING, // TODO give exception-specific advice (also OS specific)
+                    exception.toString()
+                )
                 alert.show()
             }
         }
     }
+
     fun initialize() {}
 
     fun buildGradedReader() {
@@ -53,9 +56,11 @@ class FXMLController {
         var pdfNumberOfPages = 0
 
         var vocabArray: ArrayList<String> = ArrayList() // This is a list of all the input vocabulary
-        var vocabComponentArray: ArrayList<ArrayList<String>> = ArrayList<ArrayList<String>>() // This an [array of [arrays containing input vocab split into parts]]
+        var vocabComponentArray: ArrayList<ArrayList<String>> =
+            ArrayList<ArrayList<String>>() // This an [array of [arrays containing input vocab split into parts]]
         var keyNameArray: ArrayList<String> = ArrayList()
-        var keyNameComponentArray: ArrayList<ArrayList<String>> = ArrayList<ArrayList<String>>() // This an [array of [arrays containing input key names split into parts]]
+        var keyNameComponentArray: ArrayList<ArrayList<String>> =
+            ArrayList<ArrayList<String>>() // This an [array of [arrays containing input key names split into parts]]
         var pdfPageLastSentences: ArrayList<String> = ArrayList()
         var texLinesOfPDFPagesLastSentences: ArrayList<Int> = ArrayList()
         var texLineIndexOfPDFPageLastSentence: ArrayList<Int> = ArrayList()
@@ -82,12 +87,25 @@ class FXMLController {
 
         pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(filenames.outputPDFFilename, pdfNumberOfPages)
         PDFUtils.readPDF(filenames.outputPDFFilename, vocabComponentArray, pdfPageLastSentences, pdfNumberOfPages)
-        TexUtils.getTexLineNumbers(filenames.outputStoryFilename, pdfPageLastSentences, texLinesOfPDFPagesLastSentences, texLineIndexOfPDFPageLastSentence)
+        TexUtils.getTexLineNumbers(
+            filenames.outputStoryFilename,
+            pdfPageLastSentences,
+            texLinesOfPDFPagesLastSentences,
+            texLineIndexOfPDFPageLastSentence
+        )
 
         TeXStyling.addStyling(vocabComponentArray, filenames.outputStoryFilename, "superscript")
         TeXStyling.addStyling(keyNameComponentArray, filenames.outputStoryFilename, "underline")
 
-        FooterUtils.addVocabFooters(vocabComponentArray, filenames.outputStoryFilename, texLinesOfPDFPagesLastSentences, languageUsed, pdfNumberOfPages, texLineIndexOfPDFPageLastSentence, pdfPageLastSentences)
+        FooterUtils.addVocabFooters(
+            vocabComponentArray,
+            filenames.outputStoryFilename,
+            texLinesOfPDFPagesLastSentences,
+            languageUsed,
+            pdfNumberOfPages,
+            texLineIndexOfPDFPageLastSentence,
+            pdfPageLastSentences
+        )
         outputStoryTeXWriter.close()
 
         PDFUtils.xelatexToPDF()
