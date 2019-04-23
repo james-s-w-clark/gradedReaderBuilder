@@ -1,0 +1,5 @@
+# Output folder
+output/
+
+# Any XeLaTeX/PDFLatex logs
+texput.log
