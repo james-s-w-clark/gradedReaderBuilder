@@ -3,6 +3,8 @@ package org.idiosapps
 import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
+import javafx.scene.layout.Region
+import javafx.scene.text.Text
 import java.io.PrintWriter
 
 
@@ -38,16 +40,34 @@ class FXMLController {
             try {
                 buildGradedReader()
             } catch (exception: Exception) { // e.g. Error: ctex.sty not found!
+                val text = Text(exceptionToMessage(exception))
+                text.setWrappingWidth(1000.0)
                 val alert = Alert(
-                    AlertType.WARNING, // TODO give exception-specific advice (also OS specific)
-                    exception.toString()
+                    AlertType.WARNING,
+                    exceptionToMessage(exception)
                 )
+                alert.dialogPane.minWidth = Region.USE_PREF_SIZE // TODO default size in Alert maker?
+                alert.dialogPane.minHeight = Region.USE_PREF_SIZE
                 alert.show()
             }
         }
     }
 
     fun initialize() {}
+
+    fun exceptionToMessage(exception: Exception): String { // TODO for each Exception, store 3 OS-specific messages
+        val exceptionString = exception.toString()
+        val operatingSystem = OSUtils.getOS()
+        if (operatingSystem == OSUtils.LINUX) {
+            if (exceptionString.contains("ctex.sty")) {
+                return "Please install\nsudo apt-get install texlive-lang-chinese"
+            } else
+                return "Unknown error for $operatingSystem"
+        } else {
+            return "Unknown error for $operatingSystem," +
+                    " please leave issue on gradedReaderBuilder Github"
+        }
+    }
 
     fun buildGradedReader() {
         var languageUsed = "mandarin"
