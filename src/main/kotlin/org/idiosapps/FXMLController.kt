@@ -100,7 +100,7 @@ class FXMLController {
 
         PDFUtils.xelatexToPDF()
 
-        pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(filenames.outputPDFFilename, pdfNumberOfPages)
+        pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(filenames.outputPDFFilename)
         PDFUtils.readPDF(filenames.outputPDFFilename, vocabComponentArray, pdfPageLastSentences, pdfNumberOfPages)
         TexUtils.getTexLineNumbers(
             filenames.outputStoryFilename,

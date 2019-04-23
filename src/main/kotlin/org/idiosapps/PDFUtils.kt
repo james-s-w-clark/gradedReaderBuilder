@@ -31,11 +31,11 @@ class PDFUtils {
             }
         }
 
-        fun getNumberOfPDFPages(PDFFilename: String, pdfNumberOfPages: Int): Int {
+        fun getNumberOfPDFPages(PDFFilename: String): Int {
             val pdfFile = File(PDFFilename)
-            val documentPDF: PDDocument = PDDocument.load(pdfFile)
-            var pdfNumberOfPages = documentPDF.numberOfPages
-            return pdfNumberOfPages
+            PDDocument.load(pdfFile).use {
+                pdDocument -> return pdDocument.numberOfPages
+            }
         }
 
         // TODO split this into two functions: one for vocab pages, one for last sentences on pages.
@@ -72,6 +72,7 @@ class PDFUtils {
                     }
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
             // Get the last sentence of each page, and save to array
@@ -93,6 +94,7 @@ class PDFUtils {
                     pageCounter += 1
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
             documentPDF.close()
         }
