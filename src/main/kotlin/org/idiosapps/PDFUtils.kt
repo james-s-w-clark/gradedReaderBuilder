@@ -4,27 +4,34 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import java.io.File
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class PDFUtils {
     companion object {
-        fun xelatexToPDF (outputStoryFilename: String) {
-//    TODO IMPORTANT wait until pdf has been generated before continuing!
+        fun xelatexToPDF() {
             val operatingSystem = OSUtils.getOS()
-            if (operatingSystem.contains("ubuntu")){
-                val cmdXelatexToPDF = "xelatex -output-directory=./output output/outputStory.tex"
-                Runtime.getRuntime().exec(cmdXelatexToPDF)
-                TimeUnit.SECONDS.sleep(5);
-            }
-            else if (operatingSystem.contains("windows")){
-                val process = Runtime.getRuntime().exec("cmd /c start /wait buildPDF.bat")
-                val exitVal = process.waitFor()
-            }
-            else if (operatingSystem.contains("macos")){
+            if (operatingSystem.contains(OSUtils.LINUX)) {
+                val processBuilder = ProcessBuilder(
+                    "bash", "-c", // shell command needed, -interaction=nonstopmode to see errors & not hang
+                    "xelatex -interaction=nonstopmode -output-directory=./output output/outputStory.tex"
+                )
+
+                val process = processBuilder.start()
+                val inputStream = process.inputStream
+                val scanner = java.util.Scanner(inputStream).useDelimiter("\n")
+                while (scanner.hasNext()) {
+                    val line = scanner.next()
+                    if (line.contains("Error:")) {
+                        throw Exception(line)
+                    }
+                }
+                process.waitFor()
+            } else if (operatingSystem.contains(OSUtils.WINDOWS)) {
+                Runtime.getRuntime().exec("cmd /c start /wait buildPDF.bat").waitFor()
+            } else if (operatingSystem.contains(OSUtils.MACOS)) {
             }
         }
 
-        fun getNumberOfPDFPages (PDFFilename: String, pdfNumberOfPages: Int) : Int {
+        fun getNumberOfPDFPages(PDFFilename: String, pdfNumberOfPages: Int): Int {
             val pdfFile = File(PDFFilename)
             val documentPDF: PDDocument = PDDocument.load(pdfFile)
             var pdfNumberOfPages = documentPDF.getNumberOfPages()
@@ -43,30 +50,30 @@ class PDFUtils {
                     var pageCounter = 1 // start at page 1 for each vocab Hanzi
                     var pdfPageText = ""
 
-                    while(!pdfPageText.contains(currentVocabComponent[0])) {
+                    while (!pdfPageText.contains(currentVocabComponent[0])) {
                         val stripper = PDFTextStripper()
                         stripper.startPage = pageCounter
                         stripper.endPage = pageCounter
                         pdfPageText = stripper.getText(documentPDF)
 
-                        if (pdfPageText.contains(currentVocabComponent[0])){
+                        if (pdfPageText.contains(currentVocabComponent[0])) {
                             currentVocabComponent.add(Integer.toString(pageCounter))
                         }
-                        pageCounter +=1
-                        if (pageCounter>pdfNumberOfPages){
+                        pageCounter += 1
+                        if (pageCounter > pdfNumberOfPages) {
                             println("Word not found in story: " + currentVocabComponent[0])
                             break
                         }
                     }
                 }
+            } catch (e: Exception) {
             }
-            catch(e: Exception){    }
 
             // Get the last sentence of each page, and save to array
             try {
                 var pdfPageText = ""
                 var pageCounter = 2 // start where the story starts (accounting for title page)
-                while (pageCounter<pdfNumberOfPages) { // for each page
+                while (pageCounter < pdfNumberOfPages) { // for each page
                     val stripper = PDFTextStripper()
                     var pdfPageLastLine = ""
                     stripper.startPage = pageCounter
@@ -75,17 +82,17 @@ class PDFUtils {
 
                     var pdfPageTextLines: List<String> = pdfPageText.split("\r\n")
 
-                    pdfPageLastLine = fixPDFPageLastLine(pdfPageTextLines[pdfPageTextLines.size-3])
+                    pdfPageLastLine = fixPDFPageLastLine(pdfPageTextLines[pdfPageTextLines.size - 3])
                     // pdfPageTextLines[last] is blank, pdfPageTextLines[last-1] is page #, pdfPageTextLines[last-2] is last line of text (wanted)
                     pdfPageLastSentences.add(pdfPageLastLine) // todo improve efficiency; only need 1 (of maybe 20 lines)
-                    pageCounter +=1
+                    pageCounter += 1
                 }
+            } catch (e: Exception) {
             }
-            catch(e: Exception){}
             documentPDF.close()
         }
 
-        fun fixPDFPageLastLine (pdfPageLastTextLine: String): String {
+        fun fixPDFPageLastLine(pdfPageLastTextLine: String): String {
             // Convert string to charArray (easier manipulation; String is immutable)
             var lineAsChars = pdfPageLastTextLine.toCharArray()
 

@@ -16,7 +16,7 @@ class DependencyChecker {
                     var line = ""
                     while (s.hasNext()) {
                         line = s.next()
-                        System.out.println(line)
+//                        System.out.println(line)
                         if (line.contains(HAS_pdfTeX)) // sufficiently implies installation
                             return true
                     }
@@ -28,7 +28,7 @@ class DependencyChecker {
         }
 
         val hasXeLaTeX = "XeTeX "
-        fun hasXeLaTeX(): Boolean {
+        fun hasXeLaTeX(): String {
             try {
                 val process = Runtime.getRuntime().exec("xelatex --version")
                 val inputStream = process.getInputStream()
@@ -36,14 +36,19 @@ class DependencyChecker {
                 var line = ""
                 while (s.hasNext()) {
                     line = s.next()
-                    System.out.println(line)
-                    if (line.contains(hasXeLaTeX)) // sufficiently implies installation
-                        return true
+//                    System.out.println(line)
+                    if (line.contains(hasXeLaTeX)) {    // sufficiently implies installation
+                        return "You have XeLaTeX installed"
+                    } else if (line.contains("Error:")) {
+//                        System.out.println("ERROR")
+//                        System.out.println(line)
+                        return line
+                    }
                 }
             } catch (exception: IOException) {
-                return false
+                return "Unknown XeLaTeX setup error"
             }
-        return false //hasPDFLatex
+        return "Could not use XeLaTeX"
         }
     }
 }

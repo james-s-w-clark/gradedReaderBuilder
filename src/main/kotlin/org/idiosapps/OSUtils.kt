@@ -4,7 +4,7 @@ class OSUtils {
     companion object {
         var WINDOWS: String = "windows"
         var MACOS: String = "macOS"
-        var LINUX: String = "ubuntu"
+        var LINUX: String = "linux"
         var UNDETECTED_OS: String = "undetected"
 
         fun getOS(): String {

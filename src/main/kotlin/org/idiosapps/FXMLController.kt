@@ -3,15 +3,17 @@ package org.idiosapps
 import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
+import java.io.PrintWriter
 
 
 // https://github.com/openjfx/samples/blob/master/IDE/IntelliJ/Non-Modular/Gradle/hellofx/src/main/java/org/openjfx/FXMLController.java
 class FXMLController {
+    // for info on TeX installtions: https://tex.stackexchange.com/a/134377/103997
     var messagePDFLatexMissing = "Miktex is missing!\n"
     var messageXeLaTeXMissing = "XeLaTeX is missing!\n"
 
-    var messageUbuntuPDFLatex = "Please use \nsudo apt install texlive-latex-base\n to get Miktex"
-    var messageUbuntuXeLaTeX = "Please use \nsudo apt install texlive-xetex\n\n to get XeLaTeX"
+    var messageLinuxPDFLatex = "Please use \nsudo apt install texlive-latex-full\n to get Miktex" // TODO per-language install
+    var messageLinuxXeLaTeX = "Please use \nsudo apt install texlive-xetex\n\n to get XeLaTeX"
 
 
     @FXML
@@ -21,18 +23,73 @@ class FXMLController {
         {
             val alert = Alert(
                 AlertType.WARNING,
-                messagePDFLatexMissing + messageUbuntuPDFLatex
+                messagePDFLatexMissing + messageLinuxPDFLatex
 //                , ButtonType.YES, ButtonType.NO   // could be handy
             )
             alert.show()
-        } else if (!DependencyChecker.hasXeLaTeX()) {
+        } else if (false) {
+            val xeLaTeXMessage: String = DependencyChecker.hasXeLaTeX()
             val alert = Alert(
                 AlertType.WARNING,
-                messageXeLaTeXMissing + messageUbuntuXeLaTeX)
+                xeLaTeXMessage)
             alert.show()
         } else {
-            ContentPipeline.process()
+            try {
+                buildGradedReader()
+            } catch (exception: Exception) { // e.g. Error: ctex.sty not found!
+                val alert = Alert(
+                        AlertType.WARNING, // TODO give exception-specific advice (also OS specific)
+                exception.toString())
+                alert.show()
+            }
         }
     }
     fun initialize() {}
+
+    fun buildGradedReader() {
+        var languageUsed = "mandarin"
+
+        val filenames = Filenames() // load defaults from class
+        var pdfNumberOfPages = 0
+
+        var vocabArray: ArrayList<String> = ArrayList() // This is a list of all the input vocabulary
+        var vocabComponentArray: ArrayList<ArrayList<String>> = ArrayList<ArrayList<String>>() // This an [array of [arrays containing input vocab split into parts]]
+        var keyNameArray: ArrayList<String> = ArrayList()
+        var keyNameComponentArray: ArrayList<ArrayList<String>> = ArrayList<ArrayList<String>>() // This an [array of [arrays containing input key names split into parts]]
+        var pdfPageLastSentences: ArrayList<String> = ArrayList()
+        var texLinesOfPDFPagesLastSentences: ArrayList<Int> = ArrayList()
+        var texLineIndexOfPDFPageLastSentence: ArrayList<Int> = ArrayList()
+
+        val outputStoryTeXWriter = PrintWriter(filenames.outputStoryFilename, "UTF-8")
+
+        VocabUtils.splitVocabIntoParts(filenames.inputVocabFilename, vocabArray, vocabComponentArray)
+        VocabUtils.splitVocabIntoParts(filenames.inputKeyNamesFilename, keyNameArray, keyNameComponentArray)
+
+        TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputHeaderFilename)
+        TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputTitleFilename)
+        TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputStoryFilename)
+
+        System.out.println("Copied to TeX")
+
+
+        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, filenames.inputVocabFilename, vocabComponentArray)
+        // todo WriteSummaryPage.writeTexGrammar
+
+        outputStoryTeXWriter.append("\\end{document}")
+        outputStoryTeXWriter.close()
+
+        PDFUtils.xelatexToPDF()
+
+        pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(filenames.outputPDFFilename, pdfNumberOfPages)
+        PDFUtils.readPDF(filenames.outputPDFFilename, vocabComponentArray, pdfPageLastSentences, pdfNumberOfPages)
+        TexUtils.getTexLineNumbers(filenames.outputStoryFilename, pdfPageLastSentences, texLinesOfPDFPagesLastSentences, texLineIndexOfPDFPageLastSentence)
+
+        TeXStyling.addStyling(vocabComponentArray, filenames.outputStoryFilename, "superscript")
+        TeXStyling.addStyling(keyNameComponentArray, filenames.outputStoryFilename, "underline")
+
+        FooterUtils.addVocabFooters(vocabComponentArray, filenames.outputStoryFilename, texLinesOfPDFPagesLastSentences, languageUsed, pdfNumberOfPages, texLineIndexOfPDFPageLastSentence, pdfPageLastSentences)
+        outputStoryTeXWriter.close()
+
+        PDFUtils.xelatexToPDF()
+    }
 }
