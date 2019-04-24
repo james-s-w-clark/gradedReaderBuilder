@@ -28,7 +28,7 @@ class DependencyChecker {
         }
 
         val hasXeLaTeX = "XeTeX "
-        fun hasXeLaTeX(): String {
+        fun hasXeLaTeX(): Boolean { // TODO use exceptions?
             try {
                 val process = Runtime.getRuntime().exec("xelatex --version")
                 val inputStream = process.inputStream
@@ -38,17 +38,17 @@ class DependencyChecker {
                     line = s.next()
 //                    System.out.println(line)
                     if (line.contains(hasXeLaTeX)) {    // sufficiently implies installation
-                        return "You have XeLaTeX installed"
+                        return true
                     } else if (line.contains("Error:")) {
 //                        System.out.println("ERROR")
 //                        System.out.println(line)
-                        return line
+                        return false
                     }
                 }
             } catch (exception: IOException) {
-                return "Unknown XeLaTeX setup error"
+                return false
             }
-            return "Could not use XeLaTeX"
+            return false
         }
     }
 }

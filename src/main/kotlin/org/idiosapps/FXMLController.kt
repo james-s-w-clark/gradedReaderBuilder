@@ -4,36 +4,35 @@ import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.Region
-import javafx.scene.text.Text
+import org.idiosapps.OSUtils.Companion.LINUX
+import org.idiosapps.OSUtils.Companion.MACOS
+import org.idiosapps.OSUtils.Companion.WINDOWS
 import java.io.PrintWriter
 
 
 // https://github.com/openjfx/samples/blob/master/IDE/IntelliJ/Non-Modular/Gradle/hellofx/src/main/java/org/openjfx/FXMLController.java
 class FXMLController {
-    // for info on TeX installtions: https://tex.stackexchange.com/a/134377/103997
-    var messagePDFLatexMissing = "Miktex is missing!\n"
-    var messageXeLaTeXMissing = "XeLaTeX is missing!\n"
-
-    var messageLinuxPDFLatex =
-        "Please use \nsudo apt install texlive-latex-full\n to get Miktex" // TODO per-language install
-    var messageLinuxXeLaTeX = "Please use \nsudo apt install texlive-xetex\n\n to get XeLaTeX"
-
+    val exceptionOSMap: MutableMap<String, String> = HashMap<String, String>()
+    val exceptionCTEX = "CTEX"
+    val exceptionPDFLatex = "MIKTEX"
+    val exceptionXELATEX = "XELATEX"
 
     @FXML
     fun buildButtonClicked() {
-        val operatingSystem = OSUtils.getOS() // TODO make messages clean, possibly with Alert helper
+        val OS = OSUtils.getOS() // TODO make messages clean, possibly with Alert helper
         if (!DependencyChecker.hasPDFLatex()) {
             val alert = Alert(
                 AlertType.WARNING,
-                messagePDFLatexMissing + messageLinuxPDFLatex
+                exceptionOSMap.getValue(OSUtils.getOS() + exceptionPDFLatex)
+//                messagePDFLatexMissing + messageLinuxPDFLatex
+
 //                , ButtonType.YES, ButtonType.NO   // could be handy
             )
             alert.show()
-        } else if (false) {
-            val xeLaTeXMessage: String = DependencyChecker.hasXeLaTeX()
+        } else if (!DependencyChecker.hasXeLaTeX()) {
             val alert = Alert(
                 AlertType.WARNING,
-                xeLaTeXMessage
+                exceptionOSMap.getValue(OSUtils.getOS() + exceptionXELATEX)
             )
             alert.show()
         } else {
@@ -51,19 +50,47 @@ class FXMLController {
         }
     }
 
-    fun initialize() {}
+    fun initialize() {
+        makeExceptionHashmap()
+    }
+
+    fun makeExceptionHashmap() {
+        // for info on TeX installtions: https://tex.stackexchange.com/a/134377/103997
+
+        // CTEX error
+        exceptionOSMap.put(
+            LINUX + exceptionCTEX, "Please install\n" +
+                    "sudo apt-get install texlive-lang-chinese"
+        )
+        exceptionOSMap.put(WINDOWS + exceptionCTEX, "TODO CTEX message")
+        exceptionOSMap.put(MACOS + exceptionCTEX, "TODO CTEX message")
+
+        // Miktex error
+        exceptionOSMap.put(
+            LINUX + exceptionPDFLatex, "Please use \n" +
+                    "sudo apt install texlive-latex\n" +
+                    " to get Miktex"
+        )
+        exceptionOSMap.put(WINDOWS + exceptionPDFLatex, "TODO MIKTEX message")
+        exceptionOSMap.put(MACOS + exceptionPDFLatex, "TODO MIKTEX message")
+
+        // XELATEX error
+        exceptionOSMap.put(
+            LINUX + exceptionXELATEX, "Please use \n" +
+                    "sudo apt install texlive-xetex\n" +
+                    "to get XeLaTeX"
+        )
+        exceptionOSMap.put(WINDOWS + exceptionXELATEX, "TODO XELATEX message")
+        exceptionOSMap.put(MACOS + exceptionXELATEX, "TODO XELATEX message")
+    }
 
     fun exceptionToMessage(exception: Exception): String { // TODO for each Exception, store 3 OS-specific messages
         val exceptionString = exception.toString()
-        val operatingSystem = OSUtils.getOS()
-        if (operatingSystem == OSUtils.LINUX) {
-            if (exceptionString.contains("ctex.sty")) {
-                return "Please install\nsudo apt-get install texlive-lang-chinese"
-            } else
-                return "Unknown error for $operatingSystem"
+        val OS = OSUtils.getOS()
+        if (exceptionString.contains("ctex.sty")) {
+            return exceptionOSMap.getValue(OS + "CTEX")
         } else {
-            return "Unknown error for $operatingSystem," +
-                    " please leave issue on gradedReaderBuilder Github"
+            return "Unknown error for $OS"
         }
     }
 
