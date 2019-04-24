@@ -4,44 +4,32 @@ import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.Region
-import org.idiosapps.OSUtils.Companion.LINUX
-import org.idiosapps.OSUtils.Companion.MACOS
-import org.idiosapps.OSUtils.Companion.WINDOWS
+import org.idiosapps.ExceptionHelper.Companion.exceptionPDFLatex
+import org.idiosapps.ExceptionHelper.Companion.exceptionXELATEX
 import java.io.PrintWriter
 
-
-// https://github.com/openjfx/samples/blob/master/IDE/IntelliJ/Non-Modular/Gradle/hellofx/src/main/java/org/openjfx/FXMLController.java
 class FXMLController {
-    val exceptionOSMap: MutableMap<String, String> = HashMap<String, String>()
-    val exceptionCTEX = "CTEX"
-    val exceptionPDFLatex = "MIKTEX"
-    val exceptionXELATEX = "XELATEX"
-
     @FXML
     fun buildButtonClicked() {
-        val OS = OSUtils.getOS() // TODO make messages clean, possibly with Alert helper
-        if (!DependencyChecker.hasPDFLatex()) {
+        if (!DependencyChecker.hasPDFLatex()) { // check for some prerequisites
             val alert = Alert(
                 AlertType.WARNING,
-                exceptionOSMap.getValue(OSUtils.getOS() + exceptionPDFLatex)
-//                messagePDFLatexMissing + messageLinuxPDFLatex
-
-//                , ButtonType.YES, ButtonType.NO   // could be handy
+                ExceptionHelper.getExceptionMessage(exceptionPDFLatex)
             )
             alert.show()
-        } else if (!DependencyChecker.hasXeLaTeX()) {
+        } else if (!DependencyChecker.hasXeLaTeX()) { // another prerequisite
             val alert = Alert(
                 AlertType.WARNING,
-                exceptionOSMap.getValue(OSUtils.getOS() + exceptionXELATEX)
+                ExceptionHelper.getExceptionMessage(exceptionXELATEX)
             )
             alert.show()
         } else {
             try {
-                buildGradedReader()
-            } catch (exception: Exception) { // e.g. Error: ctex.sty not found!
+                buildGradedReader() // our pipeline for building our graded reader!
+            } catch (exception: Exception) { // e.g. "Error: ctex.sty not found!" gets Thrown as Exception
                 val alert = Alert(
                     AlertType.WARNING,
-                    exceptionToMessage(exception)
+                    ExceptionHelper.exceptionToMessage(exception)
                 )
                 alert.dialogPane.minWidth = Region.USE_PREF_SIZE // TODO default size in Alert maker?
                 alert.dialogPane.minHeight = Region.USE_PREF_SIZE
@@ -50,49 +38,7 @@ class FXMLController {
         }
     }
 
-    fun initialize() {
-        makeExceptionHashmap()
-    }
-
-    fun makeExceptionHashmap() {
-        // for info on TeX installtions: https://tex.stackexchange.com/a/134377/103997
-
-        // CTEX error
-        exceptionOSMap.put(
-            LINUX + exceptionCTEX, "Please install\n" +
-                    "sudo apt-get install texlive-lang-chinese"
-        )
-        exceptionOSMap.put(WINDOWS + exceptionCTEX, "TODO CTEX message")
-        exceptionOSMap.put(MACOS + exceptionCTEX, "TODO CTEX message")
-
-        // Miktex error
-        exceptionOSMap.put(
-            LINUX + exceptionPDFLatex, "Please use \n" +
-                    "sudo apt install texlive-latex\n" +
-                    " to get Miktex"
-        )
-        exceptionOSMap.put(WINDOWS + exceptionPDFLatex, "TODO MIKTEX message")
-        exceptionOSMap.put(MACOS + exceptionPDFLatex, "TODO MIKTEX message")
-
-        // XELATEX error
-        exceptionOSMap.put(
-            LINUX + exceptionXELATEX, "Please use \n" +
-                    "sudo apt install texlive-xetex\n" +
-                    "to get XeLaTeX"
-        )
-        exceptionOSMap.put(WINDOWS + exceptionXELATEX, "TODO XELATEX message")
-        exceptionOSMap.put(MACOS + exceptionXELATEX, "TODO XELATEX message")
-    }
-
-    fun exceptionToMessage(exception: Exception): String { // TODO for each Exception, store 3 OS-specific messages
-        val exceptionString = exception.toString()
-        val OS = OSUtils.getOS()
-        if (exceptionString.contains("ctex.sty")) {
-            return exceptionOSMap.getValue(OS + "CTEX")
-        } else {
-            return "Unknown error for $OS"
-        }
-    }
+    fun initialize() {}
 
     fun buildGradedReader() {
         var languageUsed = "mandarin"
@@ -151,5 +97,10 @@ class FXMLController {
         outputStoryTeXWriter.close()
 
         PDFUtils.xelatexToPDF()
+
+        val succeedAlert = Alert(
+            AlertType.CONFIRMATION,
+            "Graded Reader built!")
+        succeedAlert.show() // OK -> Open PDF
     }
 }
