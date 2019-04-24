@@ -11,7 +11,9 @@ class ExceptionHelper {
             if (exception.toString().contains(exceptionCTEX)) {
                 return getExceptionMessage(exceptionCTEX)
             } else {
-                return "Unknown error for ${OSUtils.getOS()}"
+                // log out start of stacktrace - should help with any Exception
+                val stackTrace = exception.printStackTrace().toString()
+                return stackTrace.substring(0, stackTrace.indexOf("at java."))
             }
         }
 
