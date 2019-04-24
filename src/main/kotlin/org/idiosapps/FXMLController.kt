@@ -4,8 +4,8 @@ import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.Region
-import org.idiosapps.ExceptionHelper.Companion.exceptionPDFLatex
-import org.idiosapps.ExceptionHelper.Companion.exceptionXELATEX
+import org.idiosapps.ExceptionHelper.Companion.exceptionPdfTeX
+import org.idiosapps.ExceptionHelper.Companion.exceptionXeLaTeX
 import org.idiosapps.TeXStyling.Companion.SUPERSCRIPT_STYLING
 import org.idiosapps.TeXStyling.Companion.UNDERLINE_STYLING
 import java.io.PrintWriter
@@ -16,19 +16,20 @@ class FXMLController {
         if (!DependencyChecker.hasPDFLatex()) { // check for some prerequisites
             val alert = Alert(
                 AlertType.WARNING,
-                ExceptionHelper.getExceptionMessage(exceptionPDFLatex)
+                ExceptionHelper.getExceptionMessage(exceptionPdfTeX)
             )
             alert.show()
         } else if (!DependencyChecker.hasXeLaTeX()) { // another prerequisite
             val alert = Alert(
                 AlertType.WARNING,
-                ExceptionHelper.getExceptionMessage(exceptionXELATEX)
+                ExceptionHelper.getExceptionMessage(exceptionXeLaTeX)
             )
             alert.show()
         } else {
             try {
                 buildGradedReader() // our pipeline for building our graded reader!
             } catch (exception: Exception) { // e.g. "Error: ctex.sty not found!" gets Thrown as Exception
+                exception.printStackTrace() // useful for debugging
                 val alert = Alert(
                     AlertType.WARNING,
                     ExceptionHelper.exceptionToMessage(exception)

@@ -4,8 +4,8 @@ class ExceptionHelper {
     companion object {
         val exceptionOSMap: MutableMap<String, String> = makeExceptionHashmap()
         val exceptionCTEX = "ctex"
-        val exceptionPDFLatex = "MIKTEX"
-        val exceptionXELATEX = "XELATEX"
+        val exceptionPdfTeX = "pdftex"
+        val exceptionXeLaTeX = "xelatex"
 
         fun exceptionToMessage(exception: Exception): String {
             if (exception.toString().contains(exceptionCTEX)) {
@@ -25,7 +25,7 @@ class ExceptionHelper {
             // for info on TeX installtions: https://tex.stackexchange.com/a/134377/103997
             val exceptionOSMap: MutableMap<String, String> = HashMap()
 
-            // CTEX error
+            // CTEX error - needed for Chinese typesetting
             exceptionOSMap.put(
                 OSUtils.LINUX + exceptionCTEX, "Please install\n" +
                         "sudo apt-get install texlive-lang-chinese"
@@ -33,23 +33,28 @@ class ExceptionHelper {
             exceptionOSMap.put(OSUtils.WINDOWS + exceptionCTEX, "TODO CTEX message")
             exceptionOSMap.put(OSUtils.MACOS + exceptionCTEX, "TODO CTEX message")
 
-            // Miktex error
+            // pdfTeX error
             exceptionOSMap.put(
-                OSUtils.LINUX + exceptionPDFLatex, "TeX Live missing!\n" +
+                OSUtils.LINUX + exceptionPdfTeX, "TeX Live missing!\n" +
                         "Please install: \n" +
                         "sudo apt install texlive-latex-recommended"
             )
-            exceptionOSMap.put(OSUtils.WINDOWS + exceptionPDFLatex, "TODO MIKTEX message")
-            exceptionOSMap.put(OSUtils.MACOS + exceptionPDFLatex, "TODO MIKTEX message")
-
-            // XELATEX error
             exceptionOSMap.put(
-                OSUtils.LINUX + exceptionXELATEX, "Please use \n" +
+                OSUtils.WINDOWS + exceptionPdfTeX,
+                "pdfTeX not found! Please install from\n" +
+                        " https://www.tug.org/texlive/acquire-netinstall.html\n" +
+                        "If you already installed, please restart!"
+            )
+            exceptionOSMap.put(OSUtils.MACOS + exceptionPdfTeX, "TODO PDFLatex message")
+
+            // XeLaTeX error
+            exceptionOSMap.put(
+                OSUtils.LINUX + exceptionXeLaTeX, "Please use \n" +
                         "sudo apt install texlive-xetex\n" +
                         "to get XeLaTeX"
             )
-            exceptionOSMap.put(OSUtils.WINDOWS + exceptionXELATEX, "TODO XELATEX message")
-            exceptionOSMap.put(OSUtils.MACOS + exceptionXELATEX, "TODO XELATEX message")
+            exceptionOSMap.put(OSUtils.WINDOWS + exceptionXeLaTeX, "TODO XeLaTeX message")
+            exceptionOSMap.put(OSUtils.MACOS + exceptionXeLaTeX, "TODO XeLaTeX message")
 
             return exceptionOSMap
         }
