@@ -7,6 +7,9 @@ import java.util.*
 
 class TeXStyling {
     companion object {
+        val SUPERSCRIPT_STYLING = "superscript"
+        val UNDERLINE_STYLING = "underline"
+
         fun addStyling(inputArray: ArrayList<ArrayList<String>>, outputStoryFilename: String, markupType: String) {
             // prepare to replace content in outputStoryFile
             val path = Paths.get(outputStoryFilename)
@@ -15,9 +18,9 @@ class TeXStyling {
 
             // add styling to specific words
             inputArray.forEachIndexed { index, inputArrayElement ->
-                if (markupType == "underline") {
+                if (markupType == UNDERLINE_STYLING) {
                     content = content.replace(inputArrayElement[0].toRegex(), "\\\\uline{" + inputArrayElement[0] + "}")
-                } else if (markupType == "superscript") {
+                } else if (markupType == SUPERSCRIPT_STYLING) {
                     // TODO make input vocab size-dependency cleaner.
                     if (inputArrayElement.size == 3) { // for Hanzi,En,index, size is 3.
                         var firstVocabOccurance: Int =

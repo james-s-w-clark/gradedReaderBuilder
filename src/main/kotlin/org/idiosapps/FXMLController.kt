@@ -6,6 +6,8 @@ import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.Region
 import org.idiosapps.ExceptionHelper.Companion.exceptionPDFLatex
 import org.idiosapps.ExceptionHelper.Companion.exceptionXELATEX
+import org.idiosapps.TeXStyling.Companion.SUPERSCRIPT_STYLING
+import org.idiosapps.TeXStyling.Companion.UNDERLINE_STYLING
 import java.io.PrintWriter
 
 class FXMLController {
@@ -40,18 +42,17 @@ class FXMLController {
 
     fun initialize() {}
 
-    fun buildGradedReader() {
+    private fun buildGradedReader() {
         var languageUsed = "mandarin"
 
         val filenames = Filenames() // load defaults from class
-        var pdfNumberOfPages = 0
 
         var vocabArray: ArrayList<String> = ArrayList() // This is a list of all the input vocabulary
         var vocabComponentArray: ArrayList<ArrayList<String>> =
-            ArrayList<ArrayList<String>>() // This an [array of [arrays containing input vocab split into parts]]
+            ArrayList() // This an [array of [arrays containing input vocab split into parts]]
         var keyNameArray: ArrayList<String> = ArrayList()
         var keyNameComponentArray: ArrayList<ArrayList<String>> =
-            ArrayList<ArrayList<String>>() // This an [array of [arrays containing input key names split into parts]]
+            ArrayList() // This an [array of [arrays containing input key names split into parts]]
         var pdfPageLastSentences: ArrayList<String> = ArrayList()
         var texLinesOfPDFPagesLastSentences: ArrayList<Int> = ArrayList()
         var texLineIndexOfPDFPageLastSentence: ArrayList<Int> = ArrayList()
@@ -73,7 +74,7 @@ class FXMLController {
 
         PDFUtils.xelatexToPDF()
 
-        pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(filenames.outputPDFFilename)
+        val pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(filenames.outputPDFFilename)
         PDFUtils.readPDF(filenames.outputPDFFilename, vocabComponentArray, pdfPageLastSentences, pdfNumberOfPages)
         TexUtils.getTexLineNumbers(
             filenames.outputStoryFilename,
@@ -82,8 +83,8 @@ class FXMLController {
             texLineIndexOfPDFPageLastSentence
         )
 
-        TeXStyling.addStyling(vocabComponentArray, filenames.outputStoryFilename, "superscript")
-        TeXStyling.addStyling(keyNameComponentArray, filenames.outputStoryFilename, "underline")
+        TeXStyling.addStyling(vocabComponentArray, filenames.outputStoryFilename, SUPERSCRIPT_STYLING)
+        TeXStyling.addStyling(keyNameComponentArray, filenames.outputStoryFilename, UNDERLINE_STYLING)
 
         FooterUtils.addVocabFooters(
             vocabComponentArray,
@@ -101,6 +102,6 @@ class FXMLController {
         val succeedAlert = Alert(
             AlertType.CONFIRMATION,
             "Graded Reader built!")
-        succeedAlert.show() // OK -> Open PDF
+        succeedAlert.show() // TODO OK -> Open PDF
     }
 }
