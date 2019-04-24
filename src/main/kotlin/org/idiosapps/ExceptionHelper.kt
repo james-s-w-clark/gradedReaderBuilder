@@ -5,13 +5,14 @@ class ExceptionHelper {
         val exceptionOSMap: MutableMap<String, String> = makeExceptionHashmap()
         val exceptionCTEX = "ctex"
         val exceptionPdfTeX = "pdftex"
-        val exceptionXeLaTeX = "xelatex"
+        val exceptionXeLaTeX = "XeTeX"
 
         fun exceptionToMessage(exception: Exception): String {
             if (exception.toString().contains(exceptionCTEX)) {
                 return getExceptionMessage(exceptionCTEX)
             } else {
                 // log out start of stacktrace - should help with any Exception
+                exception.printStackTrace()
                 val stackTrace = exception.printStackTrace().toString()
                 return stackTrace.substring(0, stackTrace.indexOf("at java."))
             }
@@ -49,11 +50,13 @@ class ExceptionHelper {
 
             // XeLaTeX error
             exceptionOSMap.put(
-                OSUtils.LINUX + exceptionXeLaTeX, "Please use \n" +
+                OSUtils.LINUX + exceptionXeLaTeX, "Please use\n" +
                         "sudo apt install texlive-xetex\n" +
                         "to get XeLaTeX"
             )
-            exceptionOSMap.put(OSUtils.WINDOWS + exceptionXeLaTeX, "TODO XeLaTeX message")
+            exceptionOSMap.put(OSUtils.WINDOWS + exceptionXeLaTeX, "XeTeX is missing!\n" +
+                    "in TeX Live Manager \"Load default\" Repository, then\n" +
+                    "install XeTeX.")
             exceptionOSMap.put(OSUtils.MACOS + exceptionXeLaTeX, "TODO XeLaTeX message")
 
             return exceptionOSMap

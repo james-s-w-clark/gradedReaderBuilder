@@ -19,7 +19,7 @@ class FXMLController {
                 ExceptionHelper.getExceptionMessage(exceptionPdfTeX)
             )
             alert.show()
-        } else if (!DependencyChecker.hasXeLaTeX()) { // another prerequisite
+        } else if (!DependencyChecker.hasXeTeX()) { // another prerequisite
             val alert = Alert(
                 AlertType.WARNING,
                 ExceptionHelper.getExceptionMessage(exceptionXeLaTeX)
