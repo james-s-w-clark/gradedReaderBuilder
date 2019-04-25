@@ -4,8 +4,8 @@ import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.Region
-import org.idiosapps.ExceptionHelper.Companion.exceptionPdfTeX
-import org.idiosapps.ExceptionHelper.Companion.exceptionXeLaTeX
+import org.idiosapps.OSUtils.Companion.PDFTEX
+import org.idiosapps.OSUtils.Companion.XETEX
 import org.idiosapps.TeXStyling.Companion.SUPERSCRIPT_STYLING
 import org.idiosapps.TeXStyling.Companion.UNDERLINE_STYLING
 import java.io.PrintWriter
@@ -13,31 +13,21 @@ import java.io.PrintWriter
 class FXMLController {
     @FXML
     fun buildButtonClicked() {
-        if (!DependencyChecker.hasPDFLatex()) { // check for some prerequisites
+
+        try { // first check dependencies - have a good idea of what to expect
+            OSUtils.hasProgram(PDFTEX)
+            OSUtils.hasProgram(XETEX)
+            buildGradedReader() // our pipeline for building our graded reader!
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+
             val alert = Alert(
                 AlertType.WARNING,
-                ExceptionHelper.getExceptionMessage(exceptionPdfTeX)
+                ExceptionHelper.exceptionToMessage(exception)
             )
+            alert.dialogPane.minWidth = Region.USE_PREF_SIZE
+            alert.dialogPane.minHeight = Region.USE_PREF_SIZE
             alert.show()
-        } else if (!DependencyChecker.hasXeTeX()) { // another prerequisite
-            val alert = Alert(
-                AlertType.WARNING,
-                ExceptionHelper.getExceptionMessage(exceptionXeLaTeX)
-            )
-            alert.show()
-        } else {
-            try {
-                buildGradedReader() // our pipeline for building our graded reader!
-            } catch (exception: Exception) { // e.g. "Error: ctex.sty not found!" gets Thrown as Exception
-                exception.printStackTrace() // useful for debugging
-                val alert = Alert(
-                    AlertType.WARNING,
-                    ExceptionHelper.exceptionToMessage(exception)
-                )
-                alert.dialogPane.minWidth = Region.USE_PREF_SIZE // TODO default size in Alert maker?
-                alert.dialogPane.minHeight = Region.USE_PREF_SIZE
-                alert.show()
-            }
         }
     }
 
@@ -104,7 +94,8 @@ class FXMLController {
 
         val succeedAlert = Alert(
             AlertType.CONFIRMATION,
-            "Graded Reader built!")
+            "Graded Reader built!"
+        )
         succeedAlert.show() // TODO OK -> Open PDF
     }
 }

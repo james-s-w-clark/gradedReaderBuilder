@@ -1,20 +1,25 @@
 package org.idiosapps
 
+import org.idiosapps.OSUtils.Companion.PDFTEX
+import org.idiosapps.OSUtils.Companion.XETEX
+
 class ExceptionHelper {
     companion object {
         val exceptionOSMap: MutableMap<String, String> = makeExceptionHashmap()
-        val exceptionCTEX = "ctex"
-        val exceptionPdfTeX = "pdftex"
-        val exceptionXeLaTeX = "XeTeX"
+        val CTEX = "ctex"
 
         fun exceptionToMessage(exception: Exception): String {
-            if (exception.toString().contains(exceptionCTEX)) {
-                return getExceptionMessage(exceptionCTEX)
+            if (exception.toString().contains(CTEX)) {
+                return getExceptionMessage(CTEX)
+            } else if (exception.toString().contains(XETEX)) {
+                return getExceptionMessage(XETEX)
+            } else if (exception.toString().contains(PDFTEX)) {
+                return getExceptionMessage(PDFTEX)
             } else {
                 // log out start of stacktrace - should help with any Exception
                 exception.printStackTrace()
                 val stackTrace = exception.printStackTrace().toString()
-                return stackTrace.substring(0, stackTrace.indexOf("at java."))
+                return stackTrace.substring(0, stackTrace.indexOf("\tat ")) // 2nd line is tab indented
             }
         }
 
@@ -28,36 +33,36 @@ class ExceptionHelper {
 
             // CTEX error - needed for Chinese typesetting
             exceptionOSMap.put(
-                OSUtils.LINUX + exceptionCTEX, "Please install\n" +
+                OSUtils.LINUX + CTEX, "Please install\n" +
                         "sudo apt-get install texlive-lang-chinese"
             )
-            exceptionOSMap.put(OSUtils.WINDOWS + exceptionCTEX, "TODO CTEX message")
-            exceptionOSMap.put(OSUtils.MACOS + exceptionCTEX, "TODO CTEX message")
+            exceptionOSMap.put(OSUtils.WINDOWS + CTEX, "TODO CTEX message")
+            exceptionOSMap.put(OSUtils.MACOS + CTEX, "TODO CTEX message")
 
             // pdfTeX error
             exceptionOSMap.put(
-                OSUtils.LINUX + exceptionPdfTeX, "TeX Live missing!\n" +
+                OSUtils.LINUX + PDFTEX, "TeX Live missing!\n" +
                         "Please install: \n" +
                         "sudo apt install texlive-latex-recommended"
             )
             exceptionOSMap.put(
-                OSUtils.WINDOWS + exceptionPdfTeX,
+                OSUtils.WINDOWS + PDFTEX,
                 "pdfTeX not found! Please install from\n" +
                         " https://www.tug.org/texlive/acquire-netinstall.html\n" +
                         "If you already installed, please restart!"
             )
-            exceptionOSMap.put(OSUtils.MACOS + exceptionPdfTeX, "TODO PDFLatex message")
+            exceptionOSMap.put(OSUtils.MACOS + PDFTEX, "TODO PDFLatex message")
 
-            // XeLaTeX error
+            // XETEX error
             exceptionOSMap.put(
-                OSUtils.LINUX + exceptionXeLaTeX, "Please use\n" +
+                OSUtils.LINUX + XETEX, "Please use\n" +
                         "sudo apt install texlive-xetex\n" +
-                        "to get XeLaTeX"
+                        "to get XETEX"
             )
-            exceptionOSMap.put(OSUtils.WINDOWS + exceptionXeLaTeX, "XeTeX is missing!\n" +
+            exceptionOSMap.put(OSUtils.WINDOWS + XETEX, "XETEX is missing!\n" +
                     "in TeX Live Manager \"Load default\" Repository, then\n" +
-                    "install XeTeX.")
-            exceptionOSMap.put(OSUtils.MACOS + exceptionXeLaTeX, "TODO XeLaTeX message")
+                    "install XETEX.")
+            exceptionOSMap.put(OSUtils.MACOS + XETEX, "TODO XETEX message")
 
             return exceptionOSMap
         }
