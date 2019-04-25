@@ -58,6 +58,8 @@ class FXMLController {
         var texLinesOfPDFPagesLastSentences: ArrayList<Int> = ArrayList()
         var texLineIndexOfPDFPageLastSentence: ArrayList<Int> = ArrayList()
 
+
+        OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
         val outputStoryTeXWriter = PrintWriter(filenames.outputStoryFilename, "UTF-8")
 
         VocabUtils.splitVocabIntoParts(filenames.inputVocabFilename, vocabArray, vocabComponentArray)

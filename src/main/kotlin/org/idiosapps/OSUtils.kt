@@ -1,5 +1,7 @@
 package org.idiosapps
 
+import java.io.File
+
 class OSUtils {
     companion object {
         var WINDOWS: String = "windows"
@@ -16,6 +18,12 @@ class OSUtils {
                 operatingSystem.contains("linux") -> return LINUX
             }
             return UNDETECTED_OS
+        }
+
+        fun tryMakeOutputDir() {
+            val outputFile = File("./output/")
+            if (!outputFile.exists())
+                outputFile.mkdir()
         }
     }
 }
