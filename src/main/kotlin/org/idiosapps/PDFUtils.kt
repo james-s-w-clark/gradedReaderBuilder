@@ -25,6 +25,7 @@ class PDFUtils {
                     }
                 }
                 process.waitFor()
+                scanner.close()
             } else if (operatingSystem.contains(OSUtils.WINDOWS)) {
                 Runtime.getRuntime().exec("cmd /c start /wait buildPDF.bat").waitFor()
             } else if (operatingSystem.contains(OSUtils.MACOS)) {
