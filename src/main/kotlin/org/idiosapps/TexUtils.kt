@@ -14,12 +14,12 @@ class TexUtils {
             texLineIndexOfpdfPageLastSentence: ArrayList<Int>
         ) {
             val inputFile = File(outputStoryFilename) // get file ready
-            val scan = Scanner(inputFile)
+            val scanner = Scanner(inputFile, "UTF-8")
             var pdfPageLastSentenceIndexer = 0
             var lineCount = 0
 
-            while (scan.hasNextLine()) {
-                var line: String = scan.nextLine()
+            while (scanner.hasNextLine()) {
+                var line: String = scanner.nextLine()
                 if (pdfPageLastSentenceIndexer < pdfPageLastSentences.size) {
                     if (line.contains(pdfPageLastSentences[pdfPageLastSentenceIndexer])) {
                         texLinesOfPDFPagesLastSentences.add(lineCount)
@@ -29,15 +29,15 @@ class TexUtils {
                     lineCount++
                 }
             }
-            scan.close()
+            scanner.close()
         }
 
         fun copyToTex(outputStoryWriter: PrintWriter, inputFilename: String) {
             val inputFile = File(inputFilename)
-            val scan = Scanner(inputFile)
+            val scanner = Scanner(inputFile, "UTF-8")
 
-            while (scan.hasNextLine()) {
-                val line: String = scan.nextLine() // read all lines
+            while (scanner.hasNextLine()) {
+                val line: String = scanner.nextLine() // read all lines
                 if (line.contains("Chapter")) {   // add chapter markup if dealing with a chapter
                     outputStoryWriter.println("\\clearpage")
                     outputStoryWriter.println("{\\centering \\large")
@@ -46,7 +46,7 @@ class TexUtils {
                     outputStoryWriter.println(line)
                 }
             }
-            scan.close()
+            scanner.close()
         }
     }
 }

@@ -17,10 +17,10 @@ class VocabUtils {
             inputComponentArray: ArrayList<ArrayList<String>>
         ) {
             val inputFile = File(inputFilename)
-            val scan = Scanner(inputFile)
+            val scanner = Scanner(inputFile, "UTF-8")
             var vocabIndex = 0
-            while (scan.hasNextLine()) {
-                var vocabLine: String = scan.nextLine()
+            while (scanner.hasNextLine()) {
+                var vocabLine: String = scanner.nextLine()
 
                 // split each entry into n components (e.g. Chinese, Pinyin, and then English)
                 var vocabSplitParts = ArrayList<String>()
@@ -42,7 +42,7 @@ class VocabUtils {
                 inputComponentArray[vocabIndex].remove(inputComponentArray[vocabIndex][0]) // "uninitilaise" ArrayList empty entry
                 vocabIndex += 1
             }
-            scan.close()
+            scanner.close()
         }
     }
 }

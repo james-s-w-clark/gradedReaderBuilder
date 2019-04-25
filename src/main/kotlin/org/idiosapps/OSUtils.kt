@@ -46,7 +46,7 @@ class OSUtils {
             try {
                 val process = Runtime.getRuntime().exec(command)
                 val inputStream = process.inputStream
-                val scanner = Scanner(inputStream).useDelimiter("\\A")
+                val scanner = Scanner(inputStream, "UTF-8").useDelimiter("\\A")
                 var haveRequiredProgram = false
                 scanner.use {
                     lateinit var line: String
