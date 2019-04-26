@@ -20,4 +20,11 @@ class MainApp : Application() {
         stage.scene = scene
         stage.show()
     }
+
+    companion object{
+        @JvmStatic
+        fun main(args: Array<String>) {
+            launch(MainApp::class.java)
+        }
+    }
 }

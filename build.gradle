@@ -17,6 +17,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.15'
     compile group: 'com.jfoenix', name: 'jfoenix', version: '9.0.8'
+
+    // cross-platform jar: https://github.com/openjfx/samples/blob/master/CommandLine/Non-modular/Gradle/hellofx/build.gradle
+    // enable these when doing Gradle's shadowDistZip
+    //   for cross-OS compatibility
+    compile "org.openjfx:javafx-graphics:12.0.1:win"
+    compile "org.openjfx:javafx-graphics:12.0.1:linux"
+    compile "org.openjfx:javafx-graphics:12.0.1:mac"
 }
 
 compileKotlin {
@@ -31,4 +38,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = 'org.idiosapps.MainApp'
+application {
+    mainClassName = 'org.idiosapps.Main'
+    applicationName = 'gradedReaderBuilder'
+}
