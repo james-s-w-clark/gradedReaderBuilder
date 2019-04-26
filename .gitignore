@@ -1,5 +1,6 @@
 # Output folder
 output/
+build/
 
 # Any XeLaTeX/PDFLatex logs
 texput.log
