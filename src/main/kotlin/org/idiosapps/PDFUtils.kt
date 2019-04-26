@@ -2,40 +2,64 @@ package org.idiosapps
 
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
+import org.idiosapps.OSUtils.Companion.LINUX
+import org.idiosapps.OSUtils.Companion.LINUX_SHELL_PREFIX
+import org.idiosapps.OSUtils.Companion.MACOS
+import org.idiosapps.OSUtils.Companion.SPACE
+import org.idiosapps.OSUtils.Companion.WINDOWS
+import org.idiosapps.OSUtils.Companion.WINDOWS_COMMAND_PREFIX
 import java.io.File
 import java.util.*
 
 class PDFUtils {
     companion object {
         fun xelatexToPDF() {
-            val operatingSystem = OSUtils.getOS()
-            if (operatingSystem.contains(OSUtils.LINUX)) {
-                val processBuilder = ProcessBuilder(
-                    "bash", "-c", // shell command needed, -interaction=nonstopmode to see errors & not hang
-                    "xelatex -interaction=nonstopmode -output-directory=./output output/outputStory.tex"
-                )
+            val XETEX_NONSTOP = "xelatex -interaction=nonstopmode"
+            val XETEX_OUTDIR = "-output-directory=./output"
+            val XETEX_INFILE = "output/outputStory.tex" // this .tex is the output of previous methods
+            val XETEX_COMMAND = XETEX_NONSTOP + SPACE + XETEX_OUTDIR + SPACE + XETEX_INFILE // same for all OS
 
-                val process = processBuilder.start()
-                val inputStream = process.inputStream
-                val scanner = java.util.Scanner(inputStream).useDelimiter("\n")
+            val operatingSystem = OSUtils.getOS()
+            lateinit var command: String
+            try {
+                when {
+                    operatingSystem.contains(LINUX) -> {
+                        command = LINUX_SHELL_PREFIX.toString() + SPACE + XETEX_COMMAND // TODO fix when back on Ubuntu
+                    }
+                    operatingSystem.contains(WINDOWS) -> {
+                        command = WINDOWS_COMMAND_PREFIX + SPACE + XETEX_COMMAND
+                    }
+                    operatingSystem.contains(MACOS) -> { // maybe same as linux?
+                        command = LINUX_SHELL_PREFIX.toString() + SPACE + XETEX_COMMAND // TODO find the command for MacOS
+                    }
+                }
+                runProcess(command)
+            } catch (exception: Exception) {
+                throw exception
+            }
+        }
+
+        fun runProcess(command: String) {
+            val process = Runtime.getRuntime().exec(command)
+            val inputStream = process.inputStream
+            val scanner = java.util.Scanner(inputStream, "UTF-8")
+                .useDelimiter("\n")
+            scanner.use {
                 while (scanner.hasNext()) {
                     val line = scanner.next()
                     if (line.contains("Error:")) {
                         throw Exception(line)
                     }
                 }
-                process.waitFor()
-                scanner.close()
-            } else if (operatingSystem.contains(OSUtils.WINDOWS)) {
-                Runtime.getRuntime().exec("cmd /c start /wait buildPDF.bat").waitFor()
-            } else if (operatingSystem.contains(OSUtils.MACOS)) {
             }
+            process.waitFor()
+            scanner.close()
         }
 
         fun getNumberOfPDFPages(PDFFilename: String): Int {
             val pdfFile = File(PDFFilename)
-            PDDocument.load(pdfFile).use {
-                pdDocument -> return pdDocument.numberOfPages
+            PDDocument.load(pdfFile).use { pdDocument ->
+                return pdDocument.numberOfPages
             }
         }
 
@@ -87,7 +111,7 @@ class PDFUtils {
                     stripper.endPage = pageCounter
                     pdfPageText = stripper.getText(documentPDF)
 
-                    lateinit var  textLineDelimiter: String
+                    lateinit var textLineDelimiter: String
                     when (OSUtils.getOS()) {
                         OSUtils.LINUX -> textLineDelimiter = "\n"
                         OSUtils.WINDOWS -> textLineDelimiter = "\r\n"

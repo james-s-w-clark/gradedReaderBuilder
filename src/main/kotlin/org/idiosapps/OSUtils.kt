@@ -11,6 +11,11 @@ class OSUtils {
         const val LINUX: String = "linux"
         const val UNDETECTED_OS: String = "undetected"
 
+        const val WINDOWS_COMMAND_PREFIX = "cmd.exe /c"
+        val LINUX_SHELL_PREFIX = arrayListOf("bash", "-c")
+        val SPACE = " "
+
+
         const val XETEX = "XeTeX"
         const val PDFTEX = "pdfTeX"
 
@@ -33,13 +38,11 @@ class OSUtils {
 
         fun hasProgram(programToCheck: String) {
             val OS = getOS()
-            val WINDOWS_COMMAND_PREFIX = "cmd.exe /c "
             val VERSION_PARAM = "--version"
-            val SPACE = " "
 
             var command = ""
             if (OS == WINDOWS) {
-                command = WINDOWS_COMMAND_PREFIX // Windows needs this to be able to use e.g. XETEX
+                command = WINDOWS_COMMAND_PREFIX + SPACE // Windows needs this to be able to use e.g. XETEX
             }
             command += programToCheck + SPACE + VERSION_PARAM
 
