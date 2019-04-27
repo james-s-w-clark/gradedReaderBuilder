@@ -3,6 +3,8 @@ package org.idiosapps
 import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
+import javafx.scene.control.Alert.AlertType.ERROR
+import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.layout.Region
 import org.idiosapps.OSUtils.Companion.PDFTEX
 import org.idiosapps.OSUtils.Companion.XETEX
@@ -23,12 +25,7 @@ class FXMLController {
         } catch (exception: Exception) {
             exception.printStackTrace()
 
-            val alert = Alert(
-                AlertType.WARNING,
-                ExceptionHelper.exceptionToMessage(exception)
-            )
-            alert.dialogPane.minWidth = Region.USE_PREF_SIZE
-            alert.dialogPane.minHeight = Region.USE_PREF_SIZE
+            val alert = createFittedAlert(exception, ERROR)
             alert.show()
         }
     }
@@ -92,10 +89,24 @@ class FXMLController {
 
         PDFUtils.xelatexToPDF()
 
-        val succeedAlert = Alert(
-            AlertType.CONFIRMATION,
-            "Graded Reader built!"
-        )
-        succeedAlert.show() // TODO OK -> Open PDF
+        val succeedAlert = createFittedAlert("Graded Reader built!", INFORMATION)
+        succeedAlert.show()
+    }
+
+    private fun createFittedAlert(exception: Exception, alertType: AlertType): Alert {
+        val message = ExceptionHelper.exceptionToMessage(exception)
+        return createFittedAlert(message, alertType)
+    }
+
+    private fun createFittedAlert(message: String, alertType: AlertType): Alert {
+        val alert = Alert(alertType, message)
+        alert.dialogPane.minWidth = Region.USE_PREF_SIZE // this does the fitting of the alert
+        alert.dialogPane.minHeight = Region.USE_PREF_SIZE
+
+        when (alertType) {
+            ERROR -> alert.headerText = "Error:"
+            else -> alert.headerText = "Success:"
+        }
+        return alert
     }
 }
