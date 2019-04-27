@@ -1,3 +1,6 @@
+# Users
+Head to the [Releases tab](https://github.com/IdiosApps/gradedReaderBuilder/releases) and get the latest build for your OS.
+
 # Developers
 In IntelliJ, clone from Git source. 
 Gradle may not be happy (JRE / gradle support mismatch - something like that, forgot) - if so:
