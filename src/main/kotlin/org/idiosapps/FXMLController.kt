@@ -25,7 +25,7 @@ class FXMLController {
         } catch (exception: Exception) {
             exception.printStackTrace()
 
-            val alert = createFittedAlert(exception, ERROR)
+            val alert = createFittedAlert(exception)
             alert.show()
         }
     }
@@ -93,9 +93,9 @@ class FXMLController {
         succeedAlert.show()
     }
 
-    private fun createFittedAlert(exception: Exception, alertType: AlertType): Alert {
+    private fun createFittedAlert(exception: Exception): Alert {
         val message = ExceptionHelper.exceptionToMessage(exception)
-        return createFittedAlert(message, alertType)
+        return createFittedAlert(message, ERROR)
     }
 
     private fun createFittedAlert(message: String, alertType: AlertType): Alert {
