@@ -14,10 +14,12 @@ class FXMLController {
     @FXML
     fun buildButtonClicked() {
 
-        try { // first check dependencies - have a good idea of what to expect
+        try { // first check dependencies & inputs - have a good idea of what to expect
             OSUtils.hasProgram(PDFTEX)
             OSUtils.hasProgram(XETEX)
-            buildGradedReader() // our pipeline for building our graded reader!
+            Filenames.checkInputs()
+
+            buildGradedReader() // use our pipeline for building our graded reader!
         } catch (exception: Exception) {
             exception.printStackTrace()
 
@@ -36,8 +38,6 @@ class FXMLController {
     private fun buildGradedReader() {
         var languageUsed = "mandarin"
 
-        val filenames = Filenames() // load defaults from class
-
         var vocabArray: ArrayList<String> = ArrayList() // This is a list of all the input vocabulary
         var vocabComponentArray: ArrayList<ArrayList<String>> =
             ArrayList() // This an [array of [arrays containing input vocab split into parts]]
@@ -50,16 +50,16 @@ class FXMLController {
 
 
         OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
-        val outputStoryTeXWriter = PrintWriter(filenames.outputStoryFilename, "UTF-8")
+        val outputStoryTeXWriter = PrintWriter(Filenames.outputStoryFilename, "UTF-8")
 
-        VocabUtils.splitVocabIntoParts(filenames.inputVocabFilename, vocabArray, vocabComponentArray)
-        VocabUtils.splitVocabIntoParts(filenames.inputKeyNamesFilename, keyNameArray, keyNameComponentArray)
+        VocabUtils.splitVocabIntoParts(Filenames.inputVocabFilename, vocabArray, vocabComponentArray)
+        VocabUtils.splitVocabIntoParts(Filenames.inputKeyNamesFilename, keyNameArray, keyNameComponentArray)
 
-        TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputHeaderFilename)
-        TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputTitleFilename)
-        TexUtils.copyToTex(outputStoryTeXWriter, filenames.inputStoryFilename)
+        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputHeaderFilename)
+        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputTitleFilename)
+        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputStoryFilename)
 
-        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, filenames.inputVocabFilename, vocabComponentArray)
+        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, Filenames.inputVocabFilename, vocabComponentArray)
         // todo WriteSummaryPage.writeTexGrammar
 
         outputStoryTeXWriter.append("\\end{document}")
@@ -67,21 +67,21 @@ class FXMLController {
 
         PDFUtils.xelatexToPDF()
 
-        val pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(filenames.outputPDFFilename)
-        PDFUtils.readPDF(filenames.outputPDFFilename, vocabComponentArray, pdfPageLastSentences, pdfNumberOfPages)
+        val pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(Filenames.outputPDFFilename)
+        PDFUtils.readPDF(Filenames.outputPDFFilename, vocabComponentArray, pdfPageLastSentences, pdfNumberOfPages)
         TexUtils.getTexLineNumbers(
-            filenames.outputStoryFilename,
+            Filenames.outputStoryFilename,
             pdfPageLastSentences,
             texLinesOfPDFPagesLastSentences,
             texLineIndexOfPDFPageLastSentence
         )
 
-        TeXStyling.addStyling(vocabComponentArray, filenames.outputStoryFilename, SUPERSCRIPT_STYLING)
-        TeXStyling.addStyling(keyNameComponentArray, filenames.outputStoryFilename, UNDERLINE_STYLING)
+        TeXStyling.addStyling(vocabComponentArray, Filenames.outputStoryFilename, SUPERSCRIPT_STYLING)
+        TeXStyling.addStyling(keyNameComponentArray, Filenames.outputStoryFilename, UNDERLINE_STYLING)
 
         FooterUtils.addVocabFooters(
             vocabComponentArray,
-            filenames.outputStoryFilename,
+            Filenames.outputStoryFilename,
             texLinesOfPDFPagesLastSentences,
             languageUsed,
             pdfNumberOfPages,

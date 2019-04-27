@@ -16,6 +16,8 @@ class ExceptionHelper {
                 return getExceptionMessage(XETEX)
             } else if (exception.toString().contains(PDFTEX)) {
                 return getExceptionMessage(PDFTEX)
+            } else if (exception.toString().contains("Input")) {
+                return exception.message.toString() // Exception already contains missing input file info
             } else {
                 // log out start of stacktrace - should help with any Exception
                 exception.printStackTrace()
