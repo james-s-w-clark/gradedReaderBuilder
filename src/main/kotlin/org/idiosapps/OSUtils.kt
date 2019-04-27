@@ -68,5 +68,14 @@ class OSUtils {
                 throw Exception(exception)
             }
         }
+
+        fun getDelimiter(): String {
+            when (getOS()) {
+                LINUX -> return  "\n"
+                WINDOWS -> return "\r\n"
+                MACOS -> return "\n"
+            }
+            return "\n" // best guess for anything else
+        }
     }
 }

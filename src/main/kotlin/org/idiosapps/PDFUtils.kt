@@ -111,12 +111,7 @@ class PDFUtils {
                     stripper.endPage = pageCounter
                     pdfPageText = stripper.getText(documentPDF)
 
-                    lateinit var textLineDelimiter: String
-                    when (OSUtils.getOS()) {
-                        OSUtils.LINUX -> textLineDelimiter = "\n"
-                        OSUtils.WINDOWS -> textLineDelimiter = "\r\n"
-                        OSUtils.MACOS -> textLineDelimiter = "\n"
-                    }
+                    var textLineDelimiter = OSUtils.getDelimiter()
 
                     val pdfPageTextLines: List<String> = pdfPageText.split(textLineDelimiter)
 
