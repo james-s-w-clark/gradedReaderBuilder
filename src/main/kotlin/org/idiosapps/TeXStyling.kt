@@ -10,8 +10,9 @@ class TeXStyling {
         val SUPERSCRIPT_STYLING = "superscript"
         val UNDERLINE_STYLING = "underline"
 
-        fun addStyling(inputArray: ArrayList<ArrayList<String>>, outputStoryFilename: String, markupType: String) {
+        fun addStyling(inputArray: ArrayList<ArrayList<String>>, markupType: String) {
             // prepare to replace content in outputStoryFile
+            val outputStoryFilename = Filenames.outputTexFilename
             val path = Paths.get(outputStoryFilename)
             val charset = StandardCharsets.UTF_8
             var content = String(Files.readAllBytes(path), charset)

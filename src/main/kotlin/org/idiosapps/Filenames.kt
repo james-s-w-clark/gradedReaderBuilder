@@ -14,7 +14,7 @@ class Filenames {
         val inputVocabFilename: String = inputPrefix + "vocab"
         val inputKeyNamesFilename: String = inputPrefix + "names"
 
-        val outputStoryFilename: String = outputPrefix + "outputStory.tex"
+        val outputTexFilename: String = outputPrefix + "outputStory.tex"
         val outputPDFFilename: String = outputPrefix + "outputStory.pdf"
 
         fun checkInputs() {

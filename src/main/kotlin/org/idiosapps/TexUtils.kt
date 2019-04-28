@@ -8,11 +8,9 @@ class TexUtils {
 
     companion object {
         fun getTexLineNumbers(
-            outputStoryFilename: String,
-            pdfPageLastSentences: ArrayList<String>,
-            texLinesOfPDFPagesLastSentences: ArrayList<Int>,
-            texLineIndexOfpdfPageLastSentence: ArrayList<Int>
+            pagesInfo: MutableList<PageInfo>
         ) {
+            val outputStoryFilename = Filenames.outputTexFilename
             val inputFile = File(outputStoryFilename) // get file ready
             val scanner = Scanner(inputFile, "UTF-8")
             var pdfPageLastSentenceIndexer = 0
@@ -20,10 +18,11 @@ class TexUtils {
 
             while (scanner.hasNextLine()) {
                 var line: String = scanner.nextLine()
-                if (pdfPageLastSentenceIndexer < pdfPageLastSentences.size) {
-                    if (line.contains(pdfPageLastSentences[pdfPageLastSentenceIndexer])) {
-                        texLinesOfPDFPagesLastSentences.add(lineCount)
-                        texLineIndexOfpdfPageLastSentence.add(line.lastIndexOf(pdfPageLastSentences[pdfPageLastSentenceIndexer]))
+                if (pdfPageLastSentenceIndexer < pagesInfo.size) {
+                    val pageInfo = pagesInfo[pdfPageLastSentenceIndexer]
+                    if (line.contains(pageInfo.pdfPageLastSentence)) {
+                        pageInfo.texLinesOfPDFPagesLastSentence = lineCount
+                        pageInfo.texLineIndexOfPDFPageLastSentence = line.lastIndexOf(pageInfo.pdfPageLastSentence)
                         pdfPageLastSentenceIndexer++
                     }
                     lineCount++

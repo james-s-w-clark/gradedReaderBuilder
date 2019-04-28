@@ -56,23 +56,24 @@ class PDFUtils {
             scanner.close()
         }
 
-        fun getNumberOfPDFPages(PDFFilename: String): Int {
-            val pdfFile = File(PDFFilename)
+        fun getNumberOfPDFPages(): Int {
+            val pdfFile = File(Filenames.outputPDFFilename)
             PDDocument.load(pdfFile).use { pdDocument ->
                 return pdDocument.numberOfPages
             }
         }
 
         // TODO split this into two functions: one for vocab pages, one for last sentences on pages.
-        fun readPDF(
-            PDFFilename: String,
-            vocabComponentArray: ArrayList<ArrayList<String>>,
-            pdfPageLastSentences: ArrayList<String>,
-            pdfNumberOfPages: Int
-        ) {
+        fun getPdfPageInfo(
+            vocabComponentArray: ArrayList<ArrayList<String>>
+        ) : MutableList<PageInfo> {
             // TODO use a method similar to fixPDFPageLastLine to fix 39->8217 immediately after reading in the PDF.
-            val pdfFile = File(PDFFilename)
+            val pdfFilename = Filenames.outputPDFFilename
+            val pdfFile = File(pdfFilename)
             val documentPDF: PDDocument = PDDocument.load(pdfFile)
+            val pdfNumberOfPages = getNumberOfPDFPages()
+
+            val pagesInfo: MutableList<PageInfo> = ArrayList()
 
             // Find the first instance of each vocabulary word
             try {
@@ -117,13 +118,16 @@ class PDFUtils {
 
                     pdfPageLastLine = fixPDFPageLastLine(pdfPageTextLines[pdfPageTextLines.size - 3])
                     // pdfPageTextLines[last] is blank, pdfPageTextLines[last-1] is page #, pdfPageTextLines[last-2] is last line of text (wanted)
-                    pdfPageLastSentences.add(pdfPageLastLine) // todo improve efficiency; only need 1 (of maybe 20 lines)
+
+                    val pageInfo = PageInfo(pageCounter,pdfPageLastLine,null,null)
+                    pagesInfo.add(pageInfo) // todo improve efficiency; only need 1 (of maybe 20 lines)
                     pageCounter += 1
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
             documentPDF.close()
+            return pagesInfo
         }
 
         fun fixPDFPageLastLine(pdfPageLastTextLine: String): String {

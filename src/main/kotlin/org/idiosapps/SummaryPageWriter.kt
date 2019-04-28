@@ -8,7 +8,6 @@ class SummaryPageWriter {
     companion object {
         fun writeVocabSection(
             outputStoryWriter: PrintWriter,
-            inputVocabFilename: String,
             vocabComponentArray: ArrayList<ArrayList<String>>
         ) {
             outputStoryWriter.println("\\clearpage")

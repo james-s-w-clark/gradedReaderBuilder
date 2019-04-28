@@ -35,28 +35,22 @@ class FXMLController {
     private fun buildGradedReader() {
         var languageUsed = "mandarin"
 
-        var vocabArray: ArrayList<String> = ArrayList() // This is a list of all the input vocabulary
         var vocabComponentArray: ArrayList<ArrayList<String>> =
             ArrayList() // This an [array of [arrays containing input vocab split into parts]]
-        var keyNameArray: ArrayList<String> = ArrayList()
         var keyNameComponentArray: ArrayList<ArrayList<String>> =
             ArrayList() // This an [array of [arrays containing input key names split into parts]]
-        var pdfPageLastSentences: ArrayList<String> = ArrayList()
-        var texLinesOfPDFPagesLastSentences: ArrayList<Int> = ArrayList()
-        var texLineIndexOfPDFPageLastSentence: ArrayList<Int> = ArrayList()
-
 
         OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
-        val outputStoryTeXWriter = PrintWriter(Filenames.outputStoryFilename, "UTF-8")
+        val outputStoryTeXWriter = PrintWriter(Filenames.outputTexFilename, "UTF-8")
 
-        VocabUtils.splitVocabIntoParts(Filenames.inputVocabFilename, vocabArray, vocabComponentArray)
-        VocabUtils.splitVocabIntoParts(Filenames.inputKeyNamesFilename, keyNameArray, keyNameComponentArray)
+        VocabUtils.splitVocabIntoParts(Filenames.inputVocabFilename, vocabComponentArray)
+        VocabUtils.splitVocabIntoParts(Filenames.inputKeyNamesFilename, keyNameComponentArray)
 
         TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputHeaderFilename)
         TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputTitleFilename)
         TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputStoryFilename)
 
-        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, Filenames.inputVocabFilename, vocabComponentArray)
+        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, vocabComponentArray)
         // todo WriteSummaryPage.writeTexGrammar
 
         outputStoryTeXWriter.append("\\end{document}")
@@ -64,28 +58,19 @@ class FXMLController {
 
         PDFUtils.xelatexToPDF()
 
-        val pdfNumberOfPages = PDFUtils.getNumberOfPDFPages(Filenames.outputPDFFilename)
-        PDFUtils.readPDF(Filenames.outputPDFFilename, vocabComponentArray, pdfPageLastSentences, pdfNumberOfPages)
+        var pagesInfo = PDFUtils.getPdfPageInfo(vocabComponentArray) // store where each page's last line of text is
         TexUtils.getTexLineNumbers(
-            Filenames.outputStoryFilename,
-            pdfPageLastSentences,
-            texLinesOfPDFPagesLastSentences,
-            texLineIndexOfPDFPageLastSentence
+            pagesInfo
         )
 
-        TeXStyling.addStyling(vocabComponentArray, Filenames.outputStoryFilename, SUPERSCRIPT_STYLING)
-        TeXStyling.addStyling(keyNameComponentArray, Filenames.outputStoryFilename, UNDERLINE_STYLING)
+        TeXStyling.addStyling(vocabComponentArray, SUPERSCRIPT_STYLING)
+        TeXStyling.addStyling(keyNameComponentArray, UNDERLINE_STYLING)
 
         FooterUtils.addVocabFooters(
+            pagesInfo,
             vocabComponentArray,
-            Filenames.outputStoryFilename,
-            texLinesOfPDFPagesLastSentences,
-            languageUsed,
-            pdfNumberOfPages,
-            texLineIndexOfPDFPageLastSentence,
-            pdfPageLastSentences
+            languageUsed
         )
-        outputStoryTeXWriter.close()
 
         PDFUtils.xelatexToPDF()
 

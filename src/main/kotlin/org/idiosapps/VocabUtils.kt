@@ -13,7 +13,6 @@ class VocabUtils {
 
         fun splitVocabIntoParts(
             inputFilename: String,
-            inputArray: ArrayList<String>,
             inputComponentArray: ArrayList<ArrayList<String>>
         ) {
             val inputFile = File(inputFilename)

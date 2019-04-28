@@ -1,6 +1,5 @@
 package org.idiosapps
 
-import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -10,61 +9,63 @@ import kotlin.collections.ArrayList
 class FooterUtils {
     companion object {
         fun addVocabFooters(
+            pagesInfo: MutableList<PageInfo>,
             vocabComponentArray: ArrayList<ArrayList<String>>,
-            outputStoryFilename: String,
-            texLinesPDFPageLastSentence: ArrayList<Int>,
-            languageUsed: String,
-            pdfNumberOfPages: Int,
-            texLinesLastSentenceIndex: ArrayList<Int>,
-            pdfPageLastSentences: ArrayList<String>
+            languageUsed: String
         ) {
-            var pageNumber = 2
-            val outputStoryFile = File(outputStoryFilename)
+            var pageNumber = 0 // WAS 2 '.' size + title offset
             var footers = Footers()
 
             VocabUtils.getVocabIndicies(vocabComponentArray) // add vocab "order of appearance" index // todo create this automatically.
 
             var languageMarker = LanguageUtils.prefixLaTeXLanguageMarker(languageUsed)
-            val texPath = Paths.get(outputStoryFilename)
+            val texPath = Paths.get(Filenames.outputTexFilename)
             val lines = Files.readAllLines(texPath, StandardCharsets.UTF_8)
 
-            while (pageNumber < pdfNumberOfPages) {
+            while (pageNumber < PDFUtils.getNumberOfPDFPages() - 2) { // -1 for size, -1 for title page
+                val pageInfo = pagesInfo[pageNumber]
+
                 generateFooters(vocabComponentArray, pageNumber, languageMarker, footers)
 
-                var footerCallText: String = " \\thispagestyle{f" + (pageNumber - 1) + "}" + "\\clearpage "
+                var footerCallText: String = " \\thispagestyle{f" + (pageNumber + 1) + "}" + "\\clearpage " // + 1 '.' title page
 
-                var lineToChange = lines[texLinesPDFPageLastSentence[pageNumber - 2]]
-                var lineWithReference = ""
+                var lineToChange =
+                    lines[pageInfo.texLinesOfPDFPagesLastSentence!!] // texLinesPDFPageLastSentence[pageNumber - 2]
+                var lineWithReference: String
 
                 var stylingLength = getStylingLength(
                     lineToChange,
-                    pdfPageLastSentences,
-                    pageNumber
+                    pageNumber,
+                    pagesInfo
                 ) // styling shifted pdf-line's location in tex; account for this.
 
                 lineWithReference = lineToChange.substring(
                     0,
-                    texLinesLastSentenceIndex[pageNumber - 2] + pdfPageLastSentences[pageNumber - 2].length + stylingLength
+                    pageInfo.texLineIndexOfPDFPageLastSentence!! + pageInfo.pdfPageLastSentence.length + stylingLength
                 ) +
-                        footerCallText +
-                        lineToChange.substring(
-                            (texLinesLastSentenceIndex[pageNumber - 2] + pdfPageLastSentences[pageNumber - 2].length + stylingLength),
-                            lineToChange.length
-                        )
+                footerCallText +
+                lineToChange.substring(
+                    (pageInfo.texLineIndexOfPDFPageLastSentence!! + pageInfo.pdfPageLastSentence.length + stylingLength),
+                    lineToChange.length
+                )
 
-                lines[texLinesPDFPageLastSentence[pageNumber - 2]] = lineWithReference
+                lines[pageInfo.texLinesOfPDFPagesLastSentence!!] = lineWithReference
                 pageNumber++
             }
             Files.write(texPath, lines, StandardCharsets.UTF_8)
-            addFooterContentSection(outputStoryFilename, footers) // footer references need a list of footer contents
+            addFooterContentSection(
+                Filenames.outputTexFilename,
+                footers
+            ) // footer references need a list of footer contents
         }
 
-        fun getStylingLength(lineToChange: String, pdfPageLastSentences: ArrayList<String>, pageNumber: Int): Int {
+        fun getStylingLength(lineToChange: String, pageNumber: Int, pageInfos: MutableList<PageInfo>): Int {
             var stylingLength = 0
             var stylingRegex = """\\uline\{[a-zA-Z\d]+\}|\\text(super|sub)script\{[0-9]+\.[0-9]+\}"""
             var lineToChangeLocal = lineToChange
 
-            while (!(lineToChangeLocal.contains(pdfPageLastSentences[pageNumber - 2]))) {
+
+            while (!(lineToChangeLocal.contains(pageInfos[pageNumber].pdfPageLastSentence))) {
                 stylingLength += lineToChangeLocal.length
                 lineToChangeLocal = lineToChangeLocal.replaceFirst(stylingRegex.toRegex(), "")
                 stylingLength -= lineToChangeLocal.length
@@ -86,9 +87,9 @@ class FooterUtils {
 
             // store any vocabulary that's on this page, from all the vocab.
             vocabComponentArray.forEachIndexed { index, currentVocab ->
-                if (Integer.parseInt(currentVocab[currentVocab.size - 2]) == pageNumber) { // last component of CurrentVocab is the index, 2nd from last is page number.
+                if (Integer.parseInt(currentVocab[currentVocab.size - 2]) == pageNumber + 2) { // last component of CurrentVocab is the index, 2nd from last is page number.
                     pagesVocab.add(currentVocab)
-                }
+                } // TODO make a class for vocab
             }
 
             // two "if {while/while}" sections deal out vocab to left/right footers
