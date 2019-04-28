@@ -31,11 +31,6 @@ class FXMLController {
     private fun buildGradedReader() {
         var languageUsed = "mandarin"
 
-        var vocabComponentArray: ArrayList<ArrayList<String>> =
-            ArrayList() // This an [array of [arrays containing input vocab split into parts]]
-        var keyNameComponentArray: ArrayList<ArrayList<String>> =
-            ArrayList() // This an [array of [arrays containing input key names split into parts]]
-
         OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
         val outputStoryTeXWriter = PrintWriter(Filenames.outputTexFilename, "UTF-8")
 

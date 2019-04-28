@@ -127,58 +127,6 @@ class PDFUtils {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-//            // Find the first instance of each vocabulary word
-////            try {
-////                vocabComponentArray.forEachIndexed { index, currentVocabComponent ->
-////                    var pageCounter = 1 // start at page 1 for each vocab Hanzi
-////                    var pdfPageText = ""
-////
-////                    while (!pdfPageText.contains(currentVocabComponent[0])) {
-////                        val stripper = PDFTextStripper()
-////                        stripper.startPage = pageCounter
-////                        stripper.endPage = pageCounter
-////                        pdfPageText = stripper.getText(documentPDF)
-////
-////                        if (pdfPageText.contains(currentVocabComponent[0])) {
-////                            currentVocabComponent.add(Integer.toString(pageCounter))
-////                        }
-////                        pageCounter += 1
-////                        if (pageCounter > pdfNumberOfPages) {
-////                            println("Word not found in story: " + currentVocabComponent[0])
-////                            break
-////                        }
-////                    }
-////                }
-////            } catch (e: Exception) {
-////                e.printStackTrace()
-////            }
-
-//            // Get the last sentence of each page, and save to array
-//            try {
-//                var pdfPageText = ""
-//                var pageCounter = 2 // start where the story starts (accounting for title page)
-//                while (pageCounter < pdfNumberOfPages) { // for each page
-//                    val stripper = PDFTextStripper()
-//                    var pdfPageLastLine = ""
-//                    stripper.startPage = pageCounter
-//                    stripper.endPage = pageCounter
-//                    pdfPageText = stripper.getText(documentPDF)
-//
-//                    var textLineDelimiter = OSUtils.getDelimiter()
-//
-//                    val pdfPageTextLines: List<String> = pdfPageText.split(textLineDelimiter)
-//
-//                    pdfPageLastLine = fixPDFPageLastLine(pdfPageTextLines[pdfPageTextLines.size - 3])
-//                    // pdfPageTextLines[last] is blank, pdfPageTextLines[last-1] is page #, pdfPageTextLines[last-2] is last line of text (wanted)
-//
-//                    val pageInfo = PageInfo(pageCounter,pdfPageLastLine,null,null)
-//                    pagesInfo.add(pageInfo) // todo improve efficiency; only need 1 (of maybe 20 lines)
-//                    pageCounter += 1
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
             documentPDF.close()
             return pagesInfo
         }
