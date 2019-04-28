@@ -1,11 +1,7 @@
 package org.idiosapps
 
 import javafx.fxml.FXML
-import javafx.scene.control.Alert
-import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.Alert.AlertType.ERROR
 import javafx.scene.control.Alert.AlertType.INFORMATION
-import javafx.scene.layout.Region
 import org.idiosapps.OSUtils.Companion.PDFTEX
 import org.idiosapps.OSUtils.Companion.XETEX
 import org.idiosapps.TeXStyling.Companion.SUPERSCRIPT_STYLING
@@ -25,7 +21,7 @@ class FXMLController {
         } catch (exception: Exception) {
             exception.printStackTrace()
 
-            val alert = createFittedAlert(exception)
+            val alert = FXMLHelper.createFittedAlert(exception)
             alert.show()
         }
     }
@@ -72,24 +68,7 @@ class FXMLController {
 
         PDFUtils.xelatexToPDF()
 
-        val succeedAlert = createFittedAlert("Graded Reader built!", INFORMATION)
+        val succeedAlert = FXMLHelper.createFittedAlert("Graded Reader built!", INFORMATION)
         succeedAlert.show()
-    }
-
-    private fun createFittedAlert(exception: Exception): Alert {
-        val message = ExceptionHelper.exceptionToMessage(exception)
-        return createFittedAlert(message, ERROR)
-    }
-
-    private fun createFittedAlert(message: String, alertType: AlertType): Alert {
-        val alert = Alert(alertType, message)
-        alert.dialogPane.minWidth = Region.USE_PREF_SIZE // this does the fitting of the alert
-        alert.dialogPane.minHeight = Region.USE_PREF_SIZE
-
-        when (alertType) {
-            ERROR -> alert.headerText = "Error:"
-            else -> alert.headerText = "Success:"
-        }
-        return alert
     }
 }
