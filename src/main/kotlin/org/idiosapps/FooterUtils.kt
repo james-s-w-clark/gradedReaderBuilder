@@ -10,22 +10,22 @@ class FooterUtils {
     companion object {
         fun addVocabFooters(
             pagesInfo: MutableList<PageInfo>,
-            vocabComponentArray: ArrayList<ArrayList<String>>,
+            vocab: MutableList<Vocab>,
             languageUsed: String
-        ) {
+            ) {
             var pageNumber = 0 // WAS 2 '.' size + title offset
             var footers = Footers()
 
-            VocabUtils.getVocabIndicies(vocabComponentArray) // add vocab "order of appearance" index // todo create this automatically.
+            VocabUtils.getOrderIndicies(vocab) // add vocab "order of appearance" index // todo create this automatically.
 
-            var languageMarker = LanguageUtils.prefixLaTeXLanguageMarker(languageUsed)
+            var languageMarker = LanguageUtils.getMarker(languageUsed)
             val texPath = Paths.get(Filenames.outputTexFilename)
             val lines = Files.readAllLines(texPath, StandardCharsets.UTF_8)
 
             while (pageNumber < PDFUtils.getNumberOfPDFPages() - 2) { // -1 for size, -1 for title page
                 val pageInfo = pagesInfo[pageNumber]
 
-                generateFooters(vocabComponentArray, pageNumber, languageMarker, footers)
+                generateFooters(pageNumber, languageMarker, vocab, footers)
 
                 var footerCallText: String = " \\thispagestyle{f" + (pageNumber + 1) + "}" + "\\clearpage " // + 1 '.' title page
 
@@ -74,87 +74,36 @@ class FooterUtils {
         }
 
         fun generateFooters(
-            vocabComponentArray: ArrayList<ArrayList<String>>,
             pageNumber: Int,
             languageMarker: String,
+            vocab: MutableList<Vocab>,
             footers: Footers
         ) {
             // generate a footer for a given pageNumber
-            var pagesVocab: ArrayList<ArrayList<String>> = ArrayList<ArrayList<String>>()
-            var vocabInFooterIndex = 0
             var leftFooter = StringBuilder()
             var rightFooter = StringBuilder()
 
-            // store any vocabulary that's on this page, from all the vocab.
-            vocabComponentArray.forEachIndexed { index, currentVocab ->
-                if (Integer.parseInt(currentVocab[currentVocab.size - 2]) == pageNumber + 2) { // last component of CurrentVocab is the index, 2nd from last is page number.
-                    pagesVocab.add(currentVocab)
-                } // TODO make a class for vocab
+            // only work with the vocabulary that's on this page
+            var pagesVocab: MutableList<Vocab> = ArrayList()
+            vocab.forEach { vocabItem ->
+                if (vocabItem.firstOccurencePage == pageNumber + 2)
+                    pagesVocab.add(vocabItem)
             }
 
-            // two "if {while/while}" sections deal out vocab to left/right footers
-            if ((pagesVocab.size % 2) == 0) {    // left/right footers have 50/50 vocab
-                while (vocabInFooterIndex < (pagesVocab.size / 2)) { // left (even)
-                    appendFooterParts(leftFooter, pagesVocab, vocabInFooterIndex, languageMarker)
-                    vocabInFooterIndex++
-                }
-                while (vocabInFooterIndex < (pagesVocab.size)) {  // right (even)
-                    appendFooterParts(rightFooter, pagesVocab, vocabInFooterIndex, languageMarker)
-                    vocabInFooterIndex++
-                }
-            } else {  // left footer has an extra vocab
-                while (vocabInFooterIndex < (((pagesVocab.size) + 1) / 2)) { // left (odd)
-                    appendFooterParts(leftFooter, pagesVocab, vocabInFooterIndex, languageMarker)
-                    vocabInFooterIndex++
-                }
-                while (vocabInFooterIndex < (pagesVocab.size)) { // right (odd)
-                    appendFooterParts(rightFooter, pagesVocab, vocabInFooterIndex, languageMarker)
-                    vocabInFooterIndex++
+            var doLeftFooter = true
+            pagesVocab.forEach { vocabItem ->
+                val vocabFooter = "${vocabItem.firstOccurencePage!! - 1}.${vocabItem.vocabOrderIndex!! + 1} " +
+                        "${vocabItem.L2Word} ${LanguageUtils.getMarkedL2Extra(vocabItem)} - " +
+                        "${vocabItem.L1Word}${SummaryPageWriter.endLine}"
+                when (doLeftFooter) {
+                    true -> {leftFooter.append(vocabFooter); doLeftFooter = !doLeftFooter }
+                    false -> {rightFooter.append(vocabFooter); doLeftFooter = !doLeftFooter}
                 }
             }
             leftFooter.append("}")
             rightFooter.append("}")
             footers.lfoots.add(leftFooter.toString())
             footers.rfoots.add(rightFooter.toString())
-        }
-
-        // check how many parts are provided for vocabulary, then pass to appendFooter2/3+Parts
-        fun appendFooterParts(
-            footerToBuild: StringBuilder,
-            pagesVocab: ArrayList<ArrayList<String>>,
-            vocabInFooterIndex: Int,
-            languageMarker: String
-        ) {
-            if (pagesVocab[0].size == 4) {
-                appendFooterTwoPartsHanEn(footerToBuild, pagesVocab, vocabInFooterIndex, languageMarker)
-            } else if (pagesVocab[0].size == 5) {
-                appendFooterThreePartsHanPinEn(footerToBuild, pagesVocab, vocabInFooterIndex, languageMarker)
-            }
-        }
-
-        // First add the vocabulary index, then e.g. hanzi then english
-        fun appendFooterTwoPartsHanEn(
-            footerToBuild: StringBuilder,
-            pagesVocab: ArrayList<ArrayList<String>>,
-            vocabInFooterIndex: Int,
-            languageMarker: String
-        ) {
-            footerToBuild.append(Integer.parseInt(pagesVocab[vocabInFooterIndex][pagesVocab[0].size - 1]) + 1)
-                .append(". ").append(pagesVocab[vocabInFooterIndex][0]).append(" ")
-                .append(pagesVocab[vocabInFooterIndex][1]).append("\\\\ ")
-        }
-
-        // First add the vocabulary index, then e.g. hanzi (0), then pinyin (1) then english (2)
-        fun appendFooterThreePartsHanPinEn(
-            footerToBuild: StringBuilder,
-            pagesVocab: ArrayList<ArrayList<String>>,
-            vocabInFooterIndex: Int,
-            languageMarker: String
-        ) {
-            footerToBuild.append(Integer.parseInt(pagesVocab[vocabInFooterIndex][pagesVocab[0].size - 1]) + 1)
-                .append(". ").append(pagesVocab[vocabInFooterIndex][0]).append(" ").append(languageMarker)
-                .append(pagesVocab[vocabInFooterIndex][1]).append("}) ").append(pagesVocab[vocabInFooterIndex][2])
-                .append("\\\\ ")
         }
 
         fun addFooterContentSection(outputStoryFilename: String, footers: Footers) {
@@ -169,7 +118,6 @@ class FooterUtils {
 
             while (footersAddedIndex < footers.lfoots.size) {
                 if (footersAddedIndex == 0) { // first footer contents is a bit special
-                    var linesAdded = 0
                     var footerContentsStore = ArrayList<String>()
                     footerContentsStore.addAll(
                         Arrays.asList(
@@ -190,7 +138,6 @@ class FooterUtils {
                     footersAddedIndex++ // one footer contents (for page 1) has been added.
                 }
                 if (footersAddedIndex != 0) {
-                    var linesAdded = 0
                     var footerContentsStore = ArrayList<String>()
                     footerContentsStore.addAll(
                         Arrays.asList(

@@ -43,14 +43,14 @@ class FXMLController {
         OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
         val outputStoryTeXWriter = PrintWriter(Filenames.outputTexFilename, "UTF-8")
 
-        VocabUtils.splitVocabIntoParts(Filenames.inputVocabFilename, vocabComponentArray)
-        VocabUtils.splitVocabIntoParts(Filenames.inputKeyNamesFilename, keyNameComponentArray)
+        val vocab = VocabUtils.splitIntoParts(Filenames.inputVocabFilename)
+        val names = VocabUtils.splitIntoParts(Filenames.inputKeyNamesFilename)
 
         TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputHeaderFilename)
         TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputTitleFilename)
         TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputStoryFilename)
 
-        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, vocabComponentArray)
+        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, vocab)
         // todo WriteSummaryPage.writeTexGrammar
 
         outputStoryTeXWriter.append("\\end{document}")
@@ -58,17 +58,15 @@ class FXMLController {
 
         PDFUtils.xelatexToPDF()
 
-        var pagesInfo = PDFUtils.getPdfPageInfo(vocabComponentArray) // store where each page's last line of text is
-        TexUtils.getTexLineNumbers(
-            pagesInfo
-        )
+        var pagesInfo = PDFUtils.getPdfPageInfo(vocab) // store where each page's last line of text is
+        TexUtils.putTexLineNumbers(pagesInfo)
 
-        TeXStyling.addStyling(vocabComponentArray, SUPERSCRIPT_STYLING)
-        TeXStyling.addStyling(keyNameComponentArray, UNDERLINE_STYLING)
+        TeXStyling.addStyling(vocab, SUPERSCRIPT_STYLING)
+        TeXStyling.addStyling(names, UNDERLINE_STYLING)
 
         FooterUtils.addVocabFooters(
             pagesInfo,
-            vocabComponentArray,
+            vocab,
             languageUsed
         )
 

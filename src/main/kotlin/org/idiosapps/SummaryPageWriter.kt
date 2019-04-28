@@ -1,29 +1,25 @@
 package org.idiosapps
 
+import org.idiosapps.OSUtils.Companion.SPACE
 import java.io.PrintWriter
 
 class SummaryPageWriter {
     // TODO fun writeTeXGrammarSection
     // TODO fun writeTeXQuestionsSection
     companion object {
+        val endLine = "\\\\"
         fun writeVocabSection(
             outputStoryWriter: PrintWriter,
-            vocabComponentArray: ArrayList<ArrayList<String>>
+            vocab: MutableList<Vocab>
         ) {
             outputStoryWriter.println("\\clearpage")
             outputStoryWriter.println("\\setlength{\\parindent}{0ex}") // remove indenting
             outputStoryWriter.println("\\centerline{Vocabulary}")     // add page title
 
-            // TODO use "\\pinyin" or other for tone marking; i.e. language-dependency.
-            // print all vocab entries to page
-            if (vocabComponentArray[1].size == 2) {
-                vocabComponentArray.forEachIndexed { index, currentComponentArray ->
-                    outputStoryWriter.println("" + (index + 1) + ". " + vocabComponentArray[index][0] + " " + vocabComponentArray[index][1] + "\\\\")
-                }
-            } else if (vocabComponentArray[1].size == 3) {
-                vocabComponentArray.forEachIndexed { index, currentComponentArray ->
-                    outputStoryWriter.println("" + (index + 1) + ". " + vocabComponentArray[index][0] + " " + "\\pinyin{" + vocabComponentArray[index][1] + "}: " + vocabComponentArray[index][2] + "\\\\")
-                }
+            vocab.forEachIndexed {index, vocabItem ->
+                var L2Extra = LanguageUtils.getMarkedL2Extra(vocabItem)
+                val vocabLine = "${index + 1}. ${vocabItem.L2Word} $L2Extra ${vocabItem.L1Word}$endLine"
+                outputStoryWriter.println(vocabLine)
             }
         }
     }

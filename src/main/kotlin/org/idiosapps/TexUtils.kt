@@ -7,7 +7,7 @@ import java.util.*
 class TexUtils {
 
     companion object {
-        fun getTexLineNumbers(
+        fun putTexLineNumbers(
             pagesInfo: MutableList<PageInfo>
         ) {
             val outputStoryFilename = Filenames.outputTexFilename

@@ -2,22 +2,23 @@ package org.idiosapps
 
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 class VocabUtils {
     companion object {
-        fun getVocabIndicies(vocabComponentArray: ArrayList<ArrayList<String>>) {
-            vocabComponentArray.forEachIndexed { index, vocabElement ->
-                vocabElement.add(Integer.toString(index))
+        fun getOrderIndicies(vocab: MutableList<Vocab>) { // TODO get from story rather than just vocab order
+            vocab.forEachIndexed { index, vocabItem ->
+                vocabItem.vocabOrderIndex = index
             }
         }
 
-        fun splitVocabIntoParts(
-            inputFilename: String,
-            inputComponentArray: ArrayList<ArrayList<String>>
-        ) {
+        fun splitIntoParts(
+            inputFilename: String
+        ) : MutableList<Vocab> {
+            val vocabList: MutableList<Vocab> = ArrayList()
+
             val inputFile = File(inputFilename)
             val scanner = Scanner(inputFile, "UTF-8")
-            var vocabIndex = 0
             while (scanner.hasNextLine()) {
                 var vocabLine: String = scanner.nextLine()
 
@@ -29,19 +30,19 @@ class VocabUtils {
                 }
                 vocabSplitParts.add(vocabLine.substring(0, vocabLine.length)) // add the part after the last |
 
-                // initialise an array, add vocabSplitParts, then remove the initialising entry. TODO clean this up (no rush!)
-                var arrayListInitialiser: ArrayList<String> = ArrayList(Collections.singletonList(""))
-                inputComponentArray.add(arrayListInitialiser)
-
-                var addVocabPartIndex = 0
-                while (addVocabPartIndex < vocabSplitParts.size) {
-                    inputComponentArray[vocabIndex].add(vocabSplitParts[addVocabPartIndex])
-                    addVocabPartIndex += 1
+                lateinit var vocab: Vocab
+                when (vocabSplitParts.size) {
+                    2 -> vocab = Vocab(vocabSplitParts[0],
+                        null,
+                        vocabSplitParts[1])
+                    3 -> vocab = Vocab(vocabSplitParts[0],
+                        vocabSplitParts[1],
+                        vocabSplitParts[2])
                 }
-                inputComponentArray[vocabIndex].remove(inputComponentArray[vocabIndex][0]) // "uninitilaise" ArrayList empty entry
-                vocabIndex += 1
+                vocabList.add(vocab)
             }
             scanner.close()
+            return vocabList
         }
     }
 }

@@ -10,34 +10,22 @@ class TeXStyling {
         val SUPERSCRIPT_STYLING = "superscript"
         val UNDERLINE_STYLING = "underline"
 
-        fun addStyling(inputArray: ArrayList<ArrayList<String>>, markupType: String) {
+        fun addStyling(vocab: MutableList<Vocab>,
+                       markupType: String) {
             // prepare to replace content in outputStoryFile
             val outputStoryFilename = Filenames.outputTexFilename
             val path = Paths.get(outputStoryFilename)
             val charset = StandardCharsets.UTF_8
             var content = String(Files.readAllBytes(path), charset)
+            val underline = "\\uline{"
+            val superscript = "\\textsuperscript"
 
-            // add styling to specific words
-            inputArray.forEachIndexed { index, inputArrayElement ->
+            vocab.forEachIndexed { index, vocabItem ->
                 if (markupType == UNDERLINE_STYLING) {
-                    content = content.replace(inputArrayElement[0].toRegex(), "\\\\uline{" + inputArrayElement[0] + "}")
+                    content = content.replace(vocabItem.L2Word, "$underline+${vocabItem.L2Word}}")
                 } else if (markupType == SUPERSCRIPT_STYLING) {
-                    // TODO make input vocab size-dependency cleaner.
-                    if (inputArrayElement.size == 3) { // for Hanzi,En,index, size is 3.
-                        var firstVocabOccurance: Int =
-                            Integer.parseInt(inputArrayElement[2]) - 1 //-1 because of title page
-                        content = content.replace(
-                            inputArrayElement[0].toRegex(),
-                            inputArrayElement[0] + "\\\\textsuperscript{" + firstVocabOccurance + "." + (index + 1) + "}"
-                        )
-                    } else if (inputArrayElement.size == 4) {  // for Hanzi,Pinyin,En,index, size is 4.
-                        var firstVocabOccurance: Int =
-                            Integer.parseInt(inputArrayElement[3]) - 1 //-1 because of title page
-                        content = content.replace(
-                            inputArrayElement[0].toRegex(),
-                            inputArrayElement[0] + "\\\\textsuperscript{" + firstVocabOccurance + "." + (index + 1) + "}"
-                        )
-                    }
+                    content = content.replace(vocabItem.L2Word,
+                        "${vocabItem.L2Word}$superscript{${vocabItem.firstOccurencePage!! - 1}.${index + 1}}")
                 }
             }
             Files.write(path, content.toByteArray(charset))
