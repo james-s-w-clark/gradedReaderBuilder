@@ -114,15 +114,14 @@ class FooterUtils {
                 lines.indexOf("% Begin Document") - 1  // so we can place this all before the document begins
             var footersAddedIndex = 0
             var totalLinesAdded = 0
-            var linesAdded = 0
 
             while (footersAddedIndex < footers.lfoots.size) {
-                if (footersAddedIndex == 0) { // first footer contents is a bit special
+                if (footersAddedIndex == 0) { // first footer contents is a bit special - \\renewcommand
                     var footerContentsStore = ArrayList<String>()
-                    footerContentsStore.addAll(
+                    footerContentsStore.addAll( // create page-footer styling, which gets called
                         Arrays.asList(
                             "% % Footer 1 % %)",
-                            "\\fancypagestyle{f1}{",
+                            "\\fancypagestyle{f1}{", // special case with renewcommand below - for {f1} only
                             "\\fancyhf{}", "\\renewcommand{\\headrulewidth}{0pt}",
                             "\\cfoot{\\thepage}",
                             "\\lfoot{" + footers.lfoots[footersAddedIndex],
@@ -130,17 +129,16 @@ class FooterUtils {
                             "}"
                         )
                     )
-                    while (linesAdded < footerContentsStore.size) { // add each of the stored lines to tex
-                        lines.add(beginIndex + totalLinesAdded, footerContentsStore[linesAdded])
+                    footerContentsStore.forEach {footerPart ->
+                        lines.add(beginIndex + totalLinesAdded, footerPart)
                         totalLinesAdded++
-                        linesAdded++
                     }
                     footersAddedIndex++ // one footer contents (for page 1) has been added.
                 }
-                if (footersAddedIndex != 0) {
+                if (footersAddedIndex != 0) { // we've dealt with our special case
                     var footerContentsStore = ArrayList<String>()
                     footerContentsStore.addAll(
-                        Arrays.asList(
+                        Arrays.asList( // create page styles
                             "% % Footer " + (footersAddedIndex + 1) + "% %",
                             "\\fancypagestyle{f" + (footersAddedIndex + 1) + "}{",
                             "\\fancyhf{}",
@@ -150,10 +148,9 @@ class FooterUtils {
                             "}"
                         )
                     )
-                    while (linesAdded < footerContentsStore.size) {
-                        lines.add(beginIndex + totalLinesAdded, footerContentsStore[linesAdded])
+                    footerContentsStore.forEach { footerPart -> // add page-footer styles to TeX
+                        lines.add(beginIndex + totalLinesAdded, footerPart)
                         totalLinesAdded++
-                        linesAdded++
                     }
                     footersAddedIndex++
                 }
