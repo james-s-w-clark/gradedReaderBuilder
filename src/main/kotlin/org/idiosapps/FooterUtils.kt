@@ -3,7 +3,6 @@ package org.idiosapps
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 import kotlin.collections.ArrayList
 
 class FooterUtils {
@@ -53,7 +52,7 @@ class FooterUtils {
                 pageNumber++
             }
             Files.write(texPath, lines, StandardCharsets.UTF_8)
-            addFooterContentSection(
+            addFooterSections(
                 Filenames.outputTexFilename,
                 footers
             ) // footer references need a list of footer contents
@@ -106,8 +105,30 @@ class FooterUtils {
             footers.rfoots.add(rightFooter.toString())
         }
 
-        fun addFooterContentSection(outputStoryFilename: String, footers: Footers) {
-            // do this with Files.readAllLines, or scanning line-by-line?
+        // Page-specific footerStyles get called at the end of every page - make the contents here.
+        private fun makeFooterSection(footers: Footers, footersAddedIndex: Int): List<String> {
+            val title = "% % Footer " + (footersAddedIndex + 1) + " % %"
+            val pageStyle = "\\fancypagestyle{f" + (footersAddedIndex + 1) + "}{"
+            val fancyhf = "\\fancyhf{}"
+            val position = "\\cfoot{\\thepage}"
+            val leftFooter = "\\lfoot{" + footers.lfoots[footersAddedIndex]
+            val rightFooter = "\\rfoot{" + footers.rfoots[footersAddedIndex]
+
+            var renewCommand = if (footersAddedIndex == 0) "\\renewcommand{\\headrulewidth}{0pt}" else null
+
+            return listOfNotNull(
+                title,
+                pageStyle,
+                fancyhf,
+                renewCommand,
+                position,
+                leftFooter,
+                rightFooter,
+                "}" // have to close off section start from pageStyle
+            )
+        }
+
+        private fun addFooterSections(outputStoryFilename: String, footers: Footers) {
             val texPath = Paths.get(outputStoryFilename)
             val lines = Files.readAllLines(texPath, StandardCharsets.UTF_8)
             var beginIndex =
@@ -115,45 +136,13 @@ class FooterUtils {
             var footersAddedIndex = 0
             var totalLinesAdded = 0
 
-            while (footersAddedIndex < footers.lfoots.size) {
-                if (footersAddedIndex == 0) { // first footer contents is a bit special - \\renewcommand
-                    var footerContentsStore = ArrayList<String>()
-                    footerContentsStore.addAll( // create page-footer styling, which gets called
-                        Arrays.asList(
-                            "% % Footer 1 % %)",
-                            "\\fancypagestyle{f1}{", // special case with renewcommand below - for {f1} only
-                            "\\fancyhf{}", "\\renewcommand{\\headrulewidth}{0pt}",
-                            "\\cfoot{\\thepage}",
-                            "\\lfoot{" + footers.lfoots[footersAddedIndex],
-                            "\\rfoot{" + footers.rfoots[footersAddedIndex],
-                            "}"
-                        )
-                    )
+            while (footersAddedIndex < footers.lfoots.size) { // TODO ideally footers.forEachIndexed
+                    val footerContentsStore = makeFooterSection(footers, footersAddedIndex)
                     footerContentsStore.forEach {footerPart ->
                         lines.add(beginIndex + totalLinesAdded, footerPart)
                         totalLinesAdded++
                     }
                     footersAddedIndex++ // one footer contents (for page 1) has been added.
-                }
-                if (footersAddedIndex != 0) { // we've dealt with our special case
-                    var footerContentsStore = ArrayList<String>()
-                    footerContentsStore.addAll(
-                        Arrays.asList( // create page styles
-                            "% % Footer " + (footersAddedIndex + 1) + "% %",
-                            "\\fancypagestyle{f" + (footersAddedIndex + 1) + "}{",
-                            "\\fancyhf{}",
-                            "\\cfoot{\\thepage}",
-                            "\\lfoot{" + footers.lfoots[footersAddedIndex],
-                            "\\rfoot{" + footers.rfoots[footersAddedIndex],
-                            "}"
-                        )
-                    )
-                    footerContentsStore.forEach { footerPart -> // add page-footer styles to TeX
-                        lines.add(beginIndex + totalLinesAdded, footerPart)
-                        totalLinesAdded++
-                    }
-                    footersAddedIndex++
-                }
             }
             Files.write(texPath, lines, StandardCharsets.UTF_8)
         }
