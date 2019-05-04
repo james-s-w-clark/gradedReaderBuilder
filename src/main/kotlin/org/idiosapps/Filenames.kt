@@ -33,5 +33,10 @@ class Filenames {
                 }
             }
         }
+
+        fun hasContent(filename: String): Boolean {
+            val inputFile = File(filename)
+            return inputFile.length() > 0
+        }
     }
 }

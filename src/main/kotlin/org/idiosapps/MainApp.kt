@@ -16,6 +16,7 @@ class MainApp : Application() {
         val rootLayout = loader.load(fxmlInputStream) as VBox
         val scene = Scene(rootLayout)
 
+        scene.stylesheets.add(this::class.java.classLoader.getResource("org.idiosapps/style.css").toExternalForm())
         stage.title = "gradedReaderBuilder"
         stage.scene = scene
         stage.show()

@@ -1,0 +1,7 @@
+.jfx-combo-box {
+    -fx-prompt-text-fill: WHITE;
+}
+
+.combo-box > .list-cell {
+    -fx-text-fill: white;
+}

@@ -1,7 +1,13 @@
 package org.idiosapps
 
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
+
 class LanguageUtils {
     companion object {
+        val supportedL1: ObservableList<String> = FXCollections.observableArrayList<String>("English")
+        val supportedL2: ObservableList<String> = FXCollections.observableArrayList<String>("Chinese")
+
         fun getMarker(languageUsed: String): String {
             var languageMarker = ""
             when (languageUsed) {
