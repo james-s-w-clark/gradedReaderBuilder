@@ -22,9 +22,9 @@ dependencies {
     // cross-platform jar: https://github.com/openjfx/samples/blob/master/CommandLine/Non-modular/Gradle/hellofx/build.gradle
     // enable these when doing Gradle's shadowDistZip
     //   for cross-OS compatibility
-    compile "org.openjfx:javafx-graphics:12.0.1:win"
-    compile "org.openjfx:javafx-graphics:12.0.1:linux"
-    compile "org.openjfx:javafx-graphics:12.0.1:mac"
+//    compile "org.openjfx:javafx-graphics:12.0.1:win"
+//    compile "org.openjfx:javafx-graphics:12.0.1:linux"
+//    compile "org.openjfx:javafx-graphics:12.0.1:mac"
 }
 
 compileKotlin {

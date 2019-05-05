@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -10,94 +11,95 @@
 
 <VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.idiosapps.FXMLController">
     <children>
-        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: #36394b;" VBox.vgrow="ALWAYS">
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="515.0" prefWidth="917.0" style="-fx-background-color: #36394b;" VBox.vgrow="ALWAYS">
             <children>
-                <JFXButton fx:id="buildButton" alignment="CENTER" buttonType="RAISED" layoutX="333.0" layoutY="327.0" onAction="#buildButtonClicked" prefHeight="44.0" prefWidth="132.0" ripplerFill="#b51414" text="Build" textFill="WHITE">
+                <JFXButton fx:id="buildButton" alignment="CENTER" buttonType="RAISED" layoutX="499.0" layoutY="420.0" onAction="#buildButtonClicked" prefHeight="70.0" prefWidth="149.0" ripplerFill="#26e426" text="BUILD" textFill="WHITE">
                     <font>
                         <Font name="Noto Sans Regular" size="24.0" />
                     </font>
                 </JFXButton>
-                <JFXComboBox fx:id="l1Dropdown" layoutX="80.0" layoutY="102.0" prefHeight="29.0" prefWidth="208.0" promptText="L1" unFocusColor="#514d4d" />
-                <JFXComboBox fx:id="l2Dropdown" layoutX="80.0" layoutY="149.0" prefHeight="29.0" prefWidth="208.0" promptText="L2" />
-                <Label layoutX="14.0" layoutY="58.0" prefHeight="27.0" prefWidth="86.0" text="Inputs" textAlignment="CENTER" textFill="WHITE">
+                <JFXComboBox fx:id="l1Dropdown" layoutX="89.0" layoutY="132.0" prefHeight="29.0" prefWidth="241.0" promptText="L1" unFocusColor="#514d4d" />
+                <JFXComboBox fx:id="l2Dropdown" layoutX="89.0" layoutY="179.0" prefHeight="29.0" prefWidth="241.0" promptText="L2" />
+                <Label layoutX="23.0" layoutY="87.0" prefHeight="27.0" prefWidth="86.0" text="Inputs" textAlignment="CENTER" textFill="WHITE">
                     <font>
                         <Font size="24.0" />
                     </font>
                 </Label>
-                <Separator layoutX="320.0" layoutY="-2.0" opacity="0.68" orientation="VERTICAL" prefHeight="400.0" prefWidth="0.0" />
-                <Separator layoutX="319.0" layoutY="44.0" opacity="0.18" prefHeight="0.0" prefWidth="319.0" />
-                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="578.0" prefHeight="44.0" prefWidth="100.0" ripplerFill="#b51414" text="Close" textFill="WHITE">
+                <Separator layoutX="384.0" opacity="0.68" orientation="VERTICAL" prefHeight="515.0" prefWidth="9.0" />
+                <Separator layoutX="390.0" layoutY="57.0" opacity="0.18" prefHeight="3.0" prefWidth="529.0" />
+                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="794.0" layoutY="-1.0" prefHeight="59.0" prefWidth="125.0" ripplerFill="#b51414" text="CLOSE" textFill="WHITE">
                     <font>
-                        <Font name="Noto Sans Regular" size="24.0" />
+                        <Font size="16.0" />
                     </font>
                 </JFXButton>
-                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="508.0" prefHeight="44.0" prefWidth="80.0" ripplerFill="#b51414" text="Min" textFill="WHITE">
+                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="642.0" layoutY="-1.0" prefHeight="59.0" prefWidth="140.0" ripplerFill="#b51414" text="MINIMIZE" textFill="WHITE">
                     <font>
-                        <Font name="Noto Sans Regular" size="24.0" />
+                        <Font size="16.0" />
                     </font>
                 </JFXButton>
-                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="322.0" prefHeight="44.0" prefWidth="62.0" ripplerFill="#b51414" text="Github" textFill="WHITE">
+                <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="489.0" layoutY="-1.0" prefHeight="59.0" prefWidth="140.0" ripplerFill="#b51414" text="GITHUB" textFill="WHITE">
                     <font>
-                        <Font name="Noto Sans Regular" size="24.0" />
+                        <Font size="16.0" />
                     </font>
                 </JFXButton>
-                <Separator layoutX="1.0" layoutY="44.0" opacity="0.18" prefHeight="0.0" prefWidth="319.0" />
-                <Label layoutX="10.0" layoutY="9.0" prefHeight="27.0" prefWidth="294.0" text="Graded Reader Builder" textAlignment="CENTER" textFill="WHITE">
+                <Separator layoutY="57.0" opacity="0.18" prefHeight="3.0" prefWidth="383.0" />
+                <Label layoutX="23.0" layoutY="9.0" prefHeight="47.0" prefWidth="355.0" text="Graded Reader Builder" textAlignment="CENTER" textFill="WHITE">
                     <font>
-                        <Font name="System Bold Italic" size="24.0" />
+                        <Font name="System Bold Italic" size="32.0" />
                     </font>
                 </Label>
-                <Label layoutX="271.0" layoutY="22.0" prefHeight="27.0" prefWidth="62.0" text="by IdiosApps" textAlignment="CENTER" textFill="WHITE">
+                <Label layoutX="393.0" layoutY="29.0" prefHeight="27.0" prefWidth="140.0" text="by IdiosApps" textAlignment="CENTER" textFill="WHITE">
                     <font>
-                        <Font name="System Italic" size="8.0" />
+                        <Font name="System Italic" size="16.0" />
                     </font>
                 </Label>
-                <JFXButton alignment="CENTER" buttonType="RAISED" disable="true" layoutX="494.0" layoutY="327.0" prefHeight="44.0" prefWidth="132.0" ripplerFill="#b51414" text="Open book" textFill="WHITE">
+                <JFXButton alignment="CENTER" buttonType="RAISED" disable="true" layoutX="685.0" layoutY="420.0" prefHeight="70.0" prefWidth="149.0" ripplerFill="#b51414" text="OPEN BOOK" textFill="WHITE">
                     <font>
                         <Font name="Noto Sans Regular" size="24.0" />
                     </font>
                 </JFXButton>
-            <Label layoutX="44.0" layoutY="103.0" prefHeight="27.0" prefWidth="26.0" text="L1" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
-            <Label layoutX="44.0" layoutY="150.0" prefHeight="27.0" prefWidth="26.0" text="L2" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
-            <Label layoutX="39.0" layoutY="208.0" prefHeight="27.0" prefWidth="62.0" text="Story" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
-            <Label layoutX="39.0" layoutY="239.0" prefHeight="27.0" prefWidth="62.0" text="Vocab" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
-            <Label layoutX="39.0" layoutY="268.0" prefHeight="27.0" prefWidth="62.0" text="Names" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
-            <Separator layoutX="23.0" layoutY="193.0" opacity="0.68" prefHeight="13.0" prefWidth="275.0" />
-            <Label fx:id="storyState" layoutX="126.0" layoutY="208.0" prefHeight="27.0" prefWidth="173.0" text="storyState" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
-            <Label fx:id="vocabState" layoutX="126.0" layoutY="239.0" prefHeight="27.0" prefWidth="173.0" text="vocabState" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
-            <Label fx:id="nameState" layoutX="126.0" layoutY="268.0" prefHeight="27.0" prefWidth="173.0" text="nameState" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Noto Sans" size="16.0" />
-               </font>
-            </Label>
+                <Label layoutX="53.0" layoutY="133.0" prefHeight="27.0" prefWidth="26.0" text="L1" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="53.0" layoutY="180.0" prefHeight="27.0" prefWidth="26.0" text="L2" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="53.0" layoutY="258.0" prefHeight="27.0" prefWidth="62.0" text="Story" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="53.0" layoutY="289.0" prefHeight="27.0" prefWidth="62.0" text="Vocab" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="53.0" layoutY="318.0" prefHeight="27.0" prefWidth="62.0" text="Names" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <Separator layoutX="29.0" layoutY="232.0" opacity="0.68" prefHeight="13.0" prefWidth="327.0" />
+                <Label fx:id="storyState" layoutX="140.0" layoutY="258.0" prefHeight="27.0" prefWidth="173.0" text="storyState" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <Label fx:id="vocabState" layoutX="140.0" layoutY="289.0" prefHeight="27.0" prefWidth="173.0" text="vocabState" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <Label fx:id="nameState" layoutX="140.0" layoutY="318.0" prefHeight="27.0" prefWidth="173.0" text="nameState" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Noto Sans" size="16.0" />
+                    </font>
+                </Label>
+                <ProgressBar fx:id="progressBar" layoutX="446.0" layoutY="392.0" prefHeight="13.0" prefWidth="423.0" progress="0.0" />
             </children>
         </AnchorPane>
     </children>

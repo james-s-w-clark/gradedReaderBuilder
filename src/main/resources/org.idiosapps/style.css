@@ -5,3 +5,10 @@
 .combo-box > .list-cell {
     -fx-text-fill: white;
 }
+
+/*Raised button example */
+.jfx-button {
+     -jfx-button-type: FLAT;
+     -fx-background-color: #4d526d;
+     -fx-text-fill: white;
+}

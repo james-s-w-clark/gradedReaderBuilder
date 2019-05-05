@@ -1,39 +1,48 @@
 package org.idiosapps
 
+import com.jfoenix.controls.JFXButton
 import com.jfoenix.controls.JFXComboBox
+import javafx.concurrent.Task
 import javafx.fxml.FXML
-import javafx.scene.control.Alert.AlertType.INFORMATION
+import javafx.scene.Parent
 import javafx.scene.control.Label
+import javafx.scene.control.ProgressBar
 import org.idiosapps.OSUtils.Companion.PDFTEX
 import org.idiosapps.OSUtils.Companion.XETEX
-import org.idiosapps.TeXStyling.Companion.SUPERSCRIPT_STYLING
-import org.idiosapps.TeXStyling.Companion.UNDERLINE_STYLING
-import java.io.PrintWriter
 
 class FXMLController {
     @FXML
-    var l1Dropdown: JFXComboBox<String>? = null
+    var l1Dropdown: JFXComboBox<String> = JFXComboBox()
     @FXML
-    var l2Dropdown: JFXComboBox<String>? = null
+    var l2Dropdown: JFXComboBox<String> = JFXComboBox()
     @FXML
-    lateinit var storyState: Label
+    var storyState: Label = Label()
     @FXML
-    lateinit var vocabState: Label
+    var vocabState: Label = Label()
     @FXML
-    lateinit var nameState: Label
+    var nameState: Label = Label()
+    @FXML
+    var progressBar: ProgressBar = ProgressBar()
+    @FXML
+    var buildButton: JFXButton = JFXButton()
+
+    fun initialize() {
+        loadLanguageComboBoxes()
+    }
 
     @FXML
     fun buildButtonClicked() {
-
         try { // first check dependencies & inputs - have a good idea of what to expect
             OSUtils.hasProgram(PDFTEX)
             OSUtils.hasProgram(XETEX)
+
             Filenames.checkInputs() // just check files exist
+            clearInputStateLabels()
             checkInputStory() // check these inputs have contents
             checkInputVocab()
             checkInputNames()
 
-            buildGradedReader() // use our pipeline for building our graded reader!
+            startBookBuildPipeline()
         } catch (exception: Exception) {
             exception.printStackTrace()
 
@@ -42,8 +51,27 @@ class FXMLController {
         }
     }
 
-    fun initialize() {
-        loadLanguageComboBoxes()
+    private fun startBookBuildPipeline() {
+        val task: Task<Parent> = BuilderPipeline()
+        progressBar.progressProperty().bind(task.progressProperty())
+        val thread = Thread(task)
+        thread.isDaemon = true
+        thread.start()
+
+        task.setOnRunning {
+            buildButton.isDisable = true
+            buildButton.style = "fx-background-color: blue"
+        }
+        task.setOnSucceeded {
+            buildButton.isDisable = false
+            buildButton.style = "fx-background-color: green"
+        }
+    }
+
+    private fun clearInputStateLabels() {
+        storyState.text = "..."
+        vocabState.text = "..."
+        nameState.text = "..."
     }
 
     private fun checkInputStory() {
@@ -58,53 +86,14 @@ class FXMLController {
         } else vocabState.text = "No contents found"
     }
 
-    private fun checkInputNames(){
+    private fun checkInputNames() {
         if (Filenames.hasContent(Filenames.inputKeyNamesFilename)) {
             nameState.text = "OK"
         } else nameState.text = "No contents found"
     }
 
     private fun loadLanguageComboBoxes() {
-        l1Dropdown?.items = LanguageUtils.supportedL1
-        l2Dropdown?.items = LanguageUtils.supportedL2
-    }
-
-    private fun buildGradedReader() {
-        var languageUsed = "mandarin"
-
-        OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
-        val outputStoryTeXWriter = PrintWriter(Filenames.outputTexFilename, "UTF-8")
-
-        val vocab = VocabUtils.splitIntoParts(Filenames.inputVocabFilename)
-        val names = VocabUtils.splitIntoParts(Filenames.inputKeyNamesFilename)
-
-        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputHeaderFilename)
-        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputTitleFilename)
-        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputStoryFilename)
-
-        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, vocab)
-        // todo WriteSummaryPage.writeTexGrammar
-
-        outputStoryTeXWriter.append("\\end{document}")
-        outputStoryTeXWriter.close()
-
-        PDFUtils.xelatexToPDF()
-
-        var pagesInfo = PDFUtils.getPdfPageInfo(vocab) // store where each page's last line of text is
-        TexUtils.putTexLineNumbers(pagesInfo)
-
-        TeXStyling.addStyling(vocab, SUPERSCRIPT_STYLING)
-        TeXStyling.addStyling(names, UNDERLINE_STYLING)
-
-        FooterUtils.addVocabFooters(
-            pagesInfo,
-            vocab,
-            languageUsed
-        )
-
-        PDFUtils.xelatexToPDF()
-
-        val succeedAlert = FXMLHelper.createFittedAlert("Graded Reader built!", INFORMATION)
-        succeedAlert.show()
+        l1Dropdown.items = LanguageUtils.supportedL1
+        l2Dropdown.items = LanguageUtils.supportedL2
     }
 }
