@@ -94,7 +94,7 @@ class FooterUtils {
             pagesVocab.forEach { vocabItem ->
                 val vocabFooter = "${vocabItem.firstOccurencePage!! - 1}.${vocabItem.vocabOrderIndex!! + 1} " +
                         "${vocabItem.L2Word} ${LanguageUtils.getMarkedL2Extra(vocabItem)} - " +
-                        "${vocabItem.L1Word}${SummaryPageWriter.endLine}"
+                        "${vocabItem.L1Word}${SummaryPageUtils.endLine}"
                 when (doLeftFooter) {
                     true -> {
                         leftFooter.append(vocabFooter); doLeftFooter = !doLeftFooter

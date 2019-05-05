@@ -25,7 +25,7 @@ class BuilderPipeline : Task<Parent>() {
             TexUtils.copyToTex(texWriter, Filenames.inputTitleFilename)
             TexUtils.copyToTex(texWriter, Filenames.inputStoryFilename)
 
-            SummaryPageWriter.writeVocabSection(texWriter, vocab) // TODO add summary / grammar pages too
+            SummaryPageUtils.writeVocabSection(texWriter, vocab) // TODO add summary / grammar / names pages too
 
             texWriter.append("\\end{document}")
         }

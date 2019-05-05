@@ -1,13 +1,13 @@
 package org.idiosapps
 
-import org.idiosapps.OSUtils.Companion.SPACE
 import java.io.PrintWriter
 
-class SummaryPageWriter {
+class SummaryPageUtils {
     // TODO fun writeTeXGrammarSection
     // TODO fun writeTeXQuestionsSection
+    // TODO fun writeNamesSection
     companion object {
-        val endLine = "\\\\"
+        const val endLine = "\\\\"
         fun writeVocabSection(
             outputStoryWriter: PrintWriter,
             vocab: MutableList<Vocab>
