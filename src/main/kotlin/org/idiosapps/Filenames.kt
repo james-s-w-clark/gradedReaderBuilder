@@ -1,13 +1,14 @@
 package org.idiosapps
 
 import java.io.File
+import java.net.URL
 
 class Filenames {
     companion object {
         val inputPrefix: String = "./input/"
         val outputPrefix: String = "./output/"
 
-        val inputHeaderFilename: String = inputPrefix + "header"
+        val inputHeaderResource: URL = this::class.java.classLoader.getResource("org.idiosapps/texHeader")
         val inputTitleFilename: String = inputPrefix + "title"
         val inputStoryFilename: String = inputPrefix + "story"
 
@@ -19,7 +20,6 @@ class Filenames {
 
         fun checkInputs() {
             val inputArray = arrayListOf(
-                inputHeaderFilename,
                 inputTitleFilename,
                 inputStoryFilename,
                 inputVocabFilename,

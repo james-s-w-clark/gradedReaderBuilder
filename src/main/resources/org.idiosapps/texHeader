@@ -5,7 +5,7 @@
 % Add the ability to write pinyin with tones
 \usepackage{xeCJK}
 \usepackage{xpinyin}
-% Add the ability to create fancy headers and footers
+% Add the ability to create fancy headers and pageFooters
 \usepackage{fancyhdr}
 % Add the ability to use Lorem Ipsum placeholder text
 \usepackage{lipsum}

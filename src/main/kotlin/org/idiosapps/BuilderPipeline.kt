@@ -17,22 +17,18 @@ class BuilderPipeline : Task<Parent>() {
 
         var languageUsed = "mandarin"
 
-        OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
-        val outputStoryTeXWriter = PrintWriter(Filenames.outputTexFilename, "UTF-8")
-
         val vocab = VocabUtils.splitIntoParts(Filenames.inputVocabFilename)
         val names = VocabUtils.splitIntoParts(Filenames.inputKeyNamesFilename)
 
+        PrintWriter(Filenames.outputTexFilename, "UTF-8").use { texWriter ->
+            TexUtils.copyToTex(texWriter, Filenames.inputHeaderResource)
+            TexUtils.copyToTex(texWriter, Filenames.inputTitleFilename)
+            TexUtils.copyToTex(texWriter, Filenames.inputStoryFilename)
 
-        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputHeaderFilename)
-        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputTitleFilename)
-        TexUtils.copyToTex(outputStoryTeXWriter, Filenames.inputStoryFilename)
+            SummaryPageWriter.writeVocabSection(texWriter, vocab) // TODO add summary / grammar pages too
 
-        SummaryPageWriter.writeVocabSection(outputStoryTeXWriter, vocab)
-        // todo WriteSummaryPage.writeTexGrammar
-
-        outputStoryTeXWriter.append("\\end{document}")
-        outputStoryTeXWriter.close()
+            texWriter.append("\\end{document}")
+        }
 
         PDFUtils.xelatexToPDF()
 

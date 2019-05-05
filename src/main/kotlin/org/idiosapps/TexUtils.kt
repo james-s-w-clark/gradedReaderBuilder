@@ -2,6 +2,7 @@ package org.idiosapps
 
 import java.io.File
 import java.io.PrintWriter
+import java.net.URL
 import java.util.*
 
 class TexUtils {
@@ -46,6 +47,16 @@ class TexUtils {
                 }
             }
             scanner.close()
+        }
+
+        fun copyToTex(outputStoryWriter: PrintWriter, inputResource: URL) {
+            val resourceFile = File(inputResource.toURI())
+
+            Scanner(resourceFile, "UTF-8").use { scanner ->
+                while (scanner.hasNextLine()) {
+                    outputStoryWriter.println(scanner.nextLine())
+                }
+            }
         }
     }
 }

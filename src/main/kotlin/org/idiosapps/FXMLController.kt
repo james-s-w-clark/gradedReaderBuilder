@@ -35,6 +35,7 @@ class FXMLController {
         try { // first check dependencies & inputs - have a good idea of what to expect
             OSUtils.hasProgram(PDFTEX)
             OSUtils.hasProgram(XETEX)
+            OSUtils.tryMakeOutputDir() // Java will only make a new file if the parent folder exists (on Windows anyway)
 
             Filenames.checkInputs() // just check files exist
             clearInputStateLabels()
@@ -51,6 +52,7 @@ class FXMLController {
         }
     }
 
+    // Start another thread with the real processing, so the UI doesn't freeze
     private fun startBookBuildPipeline() {
         val task: Task<Parent> = BuilderPipeline()
         progressBar.progressProperty().bind(task.progressProperty())
