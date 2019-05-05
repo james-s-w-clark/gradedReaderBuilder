@@ -5,6 +5,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.0.0"
     id 'java'
     id "edu.sc.seis.launch4j" version "2.4.5"
+    id "edu.sc.seis.macAppBundle" version "2.3.0"
 }
 
 group 'org.idiosapps'
@@ -52,4 +53,8 @@ launch4j {
     jreMinVersion = "12.0.1"
     messagesJreVersionError = "Please install JDK12 from https://adoptopenjdk.net/releases.html?variant=openjdk12"
     // https://github.com/TheBoegl/gradle-launch4j for more options!
+}
+
+macAppBundle {
+    mainClassName = 'org.idiosapps.Main'
 }
