@@ -1,22 +1,22 @@
 package org.idiosapps
 
 import java.io.File
-import java.net.URL
 
 class Filenames {
     companion object {
-        val inputPrefix: String = "./input/"
-        val outputPrefix: String = "./output/"
+        private const val inputPrefix: String = "./input/"
+        private const val outputPrefix: String = "./output/"
 
-        val inputHeaderResource: URL = this::class.java.classLoader.getResource("org.idiosapps/texHeader")
-        val inputTitleFilename: String = inputPrefix + "title"
-        val inputStoryFilename: String = inputPrefix + "story"
+        val inputHeaderResource = this::class.java.classLoader.getResourceAsStream("org.idiosapps/texHeader")
 
-        val inputVocabFilename: String = inputPrefix + "vocab"
-        val inputKeyNamesFilename: String = inputPrefix + "names"
+        const val inputTitleFilename: String = inputPrefix + "title"
+        const val inputStoryFilename: String = inputPrefix + "story"
 
-        val outputTexFilename: String = outputPrefix + "outputStory.tex"
-        val outputPDFFilename: String = outputPrefix + "outputStory.pdf"
+        const val inputVocabFilename: String = inputPrefix + "vocab"
+        const val inputKeyNamesFilename: String = inputPrefix + "names"
+
+        const val outputTexFilename: String = outputPrefix + "outputStory.tex"
+        const val outputPDFFilename: String = outputPrefix + "outputStory.pdf"
 
         fun checkInputs() {
             val inputArray = arrayListOf(

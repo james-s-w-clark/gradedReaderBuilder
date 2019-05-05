@@ -1,8 +1,7 @@
 package org.idiosapps
 
-import java.io.File
-import java.io.PrintWriter
-import java.net.URL
+import java.io.*
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 class TexUtils {
@@ -49,13 +48,13 @@ class TexUtils {
             scanner.close()
         }
 
-        fun copyToTex(outputStoryWriter: PrintWriter, inputResource: URL) {
-            val resourceFile = File(inputResource.toURI())
-
-            Scanner(resourceFile, "UTF-8").use { scanner ->
-                while (scanner.hasNextLine()) {
-                    outputStoryWriter.println(scanner.nextLine())
-                }
+        // can't load resource as file, so we have to read from a stream of the resource
+        fun copyToTex(outputStoryWriter: PrintWriter, resourceStream: InputStream) {
+            val reader = InputStreamReader(resourceStream, StandardCharsets.UTF_8)
+            val bufferedReader = BufferedReader(reader)
+            val lines = bufferedReader.lines()
+            lines.forEach { line ->
+                outputStoryWriter.println(line)
             }
         }
     }
