@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'org.idiosapps'
-version '1.1'
+version '1.2'
 
 repositories {
     mavenCentral()
@@ -49,7 +49,7 @@ launch4j {
     mainClassName = 'org.idiosapps.Main'
     copyConfigurable = project.tasks.shadowJar.outputs.files
     jar = "lib/${project.tasks.shadowJar.archiveName}"
-    bundledJrePath = 'C:\\Program Files\\Java\\jdk-12.0.1'
-    bundledJre64Bit = true
+    jreMinVersion = "12.0.1"
+    messagesJreVersionError = "Please install JDK12 from https://adoptopenjdk.net/releases.html?variant=openjdk12"
     // https://github.com/TheBoegl/gradle-launch4j for more options!
 }
