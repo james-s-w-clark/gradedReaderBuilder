@@ -1,3 +1,26 @@
+# Graded-Reader-Builder
+Graded Reader Builder lets people create professional-quality graded readers from simple text input (story, vocab, characters, etc.). A wealth of high-quality books written by language learners, for language learners can be produced by this tool!
+
+## Graded Reader Builder Input & Output
+
+<img src="https://github.com/IdiosApps/gradedReaderBuilder_deprecated/blob/master/examples/Graded-Reader-Builder-OutputExample.png" width="400">
+<img src="https://github.com/IdiosApps/gradedReaderBuilder_deprecated/blob/master/examples/Graded-Reader-Builder-Inputs.png" width="250">
+<img src="https://github.com/IdiosApps/gradedReaderBuilder_deprecated/blob/master/examples/Graded-Reader-Builder-Vocab(CN-EN).png" width="250">
+
+The example pdf is available [here](https://github.com/IdiosApps/gradedReaderBuilder_deprecated/blob/master/examples/ExampleGradedReader.pdf)
+
+## Features
+### Supported language pairs:
+* L2 Mandarin (Hanzi/Hanzi(+pinyin in footers), L1 English
+* L2 English, L1 Mandarin (TESTING)
+
+#### Graded-reader features:
+* All vocabulary words are superscripted in the story, with the form "page.vocab number".
+* Each page with new vocabulary has left and right footers (which will split e.g. 3 words into 2 on the left, 1 on the right).
+* Key names are underlined in the story.
+
+
+
 # Users
 Head to the [Releases tab](https://github.com/IdiosApps/gradedReaderBuilder/releases) and get the latest build for your OS.
 
