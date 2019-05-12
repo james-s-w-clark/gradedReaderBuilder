@@ -41,3 +41,13 @@ In build.gradle, you will need to *comment out* these dependencies to use Gradle
 To use Gradle's `shadowDistZip` and `launch4j`, you will need to have these dependencies enabled.
 
 **If you encounter a bug, please open an issue so we can make various bug fixes and performance improvements ;)**
+
+##Prerequisites
+You may benefit from having certain fonts installed. For Windows users:
+1. Make sure the languages you want to work with are installed in Windows.
+2. Install [Google fonts](https://github.com/google/fonts). You can install these on a per-language basis, or install 
+all .ttf files by running this Powershell command in the extracted folder (thanks to [Guss & EvgeniySharapov @ Stack Exchange](https://superuser.com/a/788759/485752):
+
+`$fonts = (New-Object -ComObject Shell.Application).Namespace(0x14) >> Get-ChildItem -Recurse -include *.ttf | %{ $fonts.CopyHere($_.fullname) }`
+
+Ideally the confirmation dialogue for each font could be skipped.
